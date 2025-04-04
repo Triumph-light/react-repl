@@ -23,7 +23,7 @@ const Header = () => {
       </h1>
       <div className="links">
         <a
-          href="https://github.com/vuejs/core/tree/main/packages-private/sfc-playground"
+          href="https://github.com/Triumph-light/react-repl"
           target="_blank"
           title="View on GitHub"
         >
