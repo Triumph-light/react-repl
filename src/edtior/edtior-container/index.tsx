@@ -1,15 +1,16 @@
-import React, { useContext, useRef } from "react";
-import { transform } from "@babel/standalone";
-import { OutputContext } from "../../ouput/outputContext";
+import React, { useContext } from "react";
 import MonaceEditor from "../../monaco/index";
+import StoreContext from "../../component/repl/storeContext";
 
 const EditorContainer = () => {
-  const previewRef = useContext(OutputContext);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  console.log("previewRef", previewRef);
-
+  const { store, setStore } = useContext(StoreContext);
   const onChange = (code: string) => {
-    console.log("code", code);
+    console.log("code", store, code);
+    setStore({
+      activeFile: {
+        code: code,
+      },
+    });
   };
 
   return (
