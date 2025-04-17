@@ -6,8 +6,8 @@ import "./index.less";
 import StoreContext from "../../component/repl/storeContext";
 import { transform } from "@babel/standalone";
 
-const Preview = (props, ref) => {
-  const { store } = useContext(StoreContext);
+const Preview = () => {
+  const store = useContext(StoreContext);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const sandbox = useRef<HTMLIFrameElement | null>(null);
@@ -15,9 +15,13 @@ const Preview = (props, ref) => {
     sandbox.current = document.createElement("iframe");
     sandbox.current.srcdoc = iframeRaw;
     containerRef.current?.appendChild(sandbox.current);
+
+    const code =
+      store.value.activeFile.code +
+      'createRoot(document.getElementById("root")).render(<App />);';
     sandbox.current.addEventListener("load", () => {
       sandbox.current?.contentWindow?.postMessage(
-        transform(store.activeFile.code, {
+        transform(code, {
           presets: ["react"],
         }).code,
         "*"
