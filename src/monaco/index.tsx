@@ -5,10 +5,11 @@ import { registerHighlighter } from "./highlight";
 
 interface Props {
   onChange: (code: string) => void;
+  value: string;
 }
 
 const MonacoEditor = (props: Props) => {
-  const { onChange } = props;
+  const { onChange, value } = props;
 
   const containerRef = useRef(null) as unknown as Ref<HTMLDivElement>;
   const editorInstance = useRef<monaco.editor.IStandaloneCodeEditor>();
@@ -17,6 +18,7 @@ const MonacoEditor = (props: Props) => {
     const theme = registerHighlighter();
     console.log(theme.light);
     editorInstance.current = monaco.editor.create(containerRef.current, {
+      value: value,
       language: "jsx",
       fontSize: 13,
       tabSize: 2,

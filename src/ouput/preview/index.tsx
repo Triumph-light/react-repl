@@ -16,9 +16,16 @@ const Preview = () => {
     sandbox.current.srcdoc = iframeRaw;
     containerRef.current?.appendChild(sandbox.current);
 
-    const code =
-      store.value.activeFile.code +
-      'createRoot(document.getElementById("root")).render(<App />);';
+    let code = store.activeFile.code;
+    if (code) {
+      if (store.activeFilename === "App.jsx") {
+        code = `import { createRoot } from "react-dom/client";
+          ${code};
+          createRoot(document.getElementById("root")).render(<App />);
+        `;
+      }
+    }
+
     sandbox.current.addEventListener("load", () => {
       sandbox.current?.contentWindow?.postMessage(
         transform(code, {
@@ -31,7 +38,7 @@ const Preview = () => {
 
   onMount(() => {
     createSandbox();
-    console.log("store", store);
+    console.log("preview", store);
   });
 
   onUnMount(() => {

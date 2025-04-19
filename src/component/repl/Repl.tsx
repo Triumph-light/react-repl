@@ -10,6 +10,7 @@ const Repl = () => {
   const previewRef = useRef(null);
 
   const store = useStore();
+  console.log("store", store);
 
   return (
     <div className="react-repl">
