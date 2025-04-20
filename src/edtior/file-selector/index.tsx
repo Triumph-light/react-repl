@@ -8,11 +8,10 @@ const FileSelector = () => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const store = useContext(StoreContext);
-  const { files, renameFile, addFile, deleteFile } = store!;
+  const { files, activeFilename, renameFile, addFile, deleteFile, setActive } =
+    store!;
 
   const filenames = Object.entries(files).map(([name]) => name);
-
-  const activeIndex = 0;
 
   const startAddFile = () => {
     let i = 0;
@@ -80,7 +79,8 @@ const FileSelector = () => {
         <Fragment key={index}>
           {pending !== file && (
             <div
-              className={`file ${activeIndex === index && "active"}`}
+              className={`file ${activeFilename === file && "active"}`}
+              onClick={() => setActive(file)}
               onDoubleClick={() => index > 0 && editFileName(file)}
             >
               <span className="label">{file}</span>

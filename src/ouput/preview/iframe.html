@@ -19,13 +19,21 @@
     <div id="root"></div>
 
     <script type="module">
+      function handle_message(e) {
+        let {action} = e.data
+        console.log('e', e)
+        if(action === 'eval') {
+          const { script: scripts } = e.data.args
+
+          const script = document.createElement("script");
+          script.textContent = scripts;
+          script.type = "module";
+          document.body.appendChild(script);
+        }
+      }
+    
       // 渲染编译完成之后的代码
-      window.addEventListener("message", function (e) {
-        const script = document.createElement("script");
-        script.textContent = e.data;
-        script.type = "module";
-        document.body.appendChild(script);
-      });
+      window.addEventListener("message", handle_message);
     </script>
   </body>
 </html>

@@ -2,6 +2,7 @@
 import { Ref, useEffect, useRef } from "react";
 import * as monaco from "monaco-editor-core";
 import { registerHighlighter } from "./highlight";
+import { onMount, onUnMount } from "../hooks/index";
 
 interface Props {
   onChange: (code: string) => void;
@@ -14,9 +15,9 @@ const MonacoEditor = (props: Props) => {
   const containerRef = useRef(null) as unknown as Ref<HTMLDivElement>;
   const editorInstance = useRef<monaco.editor.IStandaloneCodeEditor>();
 
-  useEffect(() => {
+  onMount(() => {
+    console.log("value", value);
     const theme = registerHighlighter();
-    console.log(theme.light);
     editorInstance.current = monaco.editor.create(containerRef.current, {
       value: value,
       language: "jsx",
@@ -34,11 +35,11 @@ const MonacoEditor = (props: Props) => {
       readOnly: false,
       theme: theme.light,
     });
+  });
 
-    return () => {
-      editorInstance.current?.dispose();
-    };
-  }, [monaco]);
+  onUnMount(() => {
+    editorInstance.current?.dispose();
+  });
 
   // Windows/Linux: Ctrl + S；Mac：Meta(⌘) + S
   const emitChangeEvent = (e: KeyboardEvent) => {

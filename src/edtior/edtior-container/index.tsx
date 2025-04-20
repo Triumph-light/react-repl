@@ -5,6 +5,8 @@ import FileSelector from "../file-selector";
 
 const EditorContainer = () => {
   const { updateFile, activeFile } = useContext(StoreContext);
+
+  console.log("editor", activeFile);
   const onChange = (code: string) => {
     updateFile(code);
   };

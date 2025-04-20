@@ -137,8 +137,11 @@ export function useStore({
         })
     }
 
-    const setActive: ReturnStore['setActive'] = () => {
-
+    const setActive: ReturnStore['setActive'] = (filename) => {
+        setValue({
+            ...value,
+            activeFilename: filename
+        })
     }
 
 
