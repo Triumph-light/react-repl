@@ -16,7 +16,6 @@ const MonacoEditor = (props: Props) => {
   const editorInstance = useRef<monaco.editor.IStandaloneCodeEditor>();
 
   onMount(() => {
-    console.log("value", value);
     const theme = registerHighlighter();
     editorInstance.current = monaco.editor.create(containerRef.current, {
       value: value,

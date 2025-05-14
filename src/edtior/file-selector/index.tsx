@@ -21,7 +21,6 @@ const FileSelector = () => {
       let hasConfict = false;
 
       for (const filename in files) {
-        console.log(filename, name);
         if (filename === name) {
           hasConfict = true;
           name = `Comp${++i}.jsx`;
@@ -101,19 +100,19 @@ const FileSelector = () => {
           )}
           {((pending === true && index === filenames.length - 1) ||
             pending === file) && (
-            <div className="file pending">
-              <span className="file pending">{pendingFileName}</span>
-              <input
-                ref={inputRef}
-                value={pendingFileName}
-                onChange={(e) => setPendingFileName(e.target.value)}
-                onBlur={doneNameFile}
-                onKeyUp={(e) =>
-                  (e.key === "Enter" || e.key === "Esc") && doneNameFile()
-                }
-              ></input>
-            </div>
-          )}
+              <div className="file pending">
+                <span className="file pending">{pendingFileName}</span>
+                <input
+                  ref={inputRef}
+                  value={pendingFileName}
+                  onChange={(e) => setPendingFileName(e.target.value)}
+                  onBlur={doneNameFile}
+                  onKeyUp={(e) =>
+                    (e.key === "Enter" || e.key === "Esc") && doneNameFile()
+                  }
+                ></input>
+              </div>
+            )}
         </Fragment>
       ))}
       <span className="add" onClick={startAddFile}>

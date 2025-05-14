@@ -3,7 +3,6 @@ import iframeRaw from "./iframe.html?raw";
 import { onMount, onUnMount } from "../../hooks/index";
 import "./index.less";
 import StoreContext from "../../component/repl/storeContext";
-import { transform } from "@babel/standalone";
 import { PreviewProxy } from "../PreviewProxy";
 import { compileModulesForPreview } from "../moduleCompiler";
 
@@ -28,13 +27,15 @@ const Preview = () => {
 
     const codeToEval = [`window.__modules__ = {}`, ...modules];
 
+    /**
+     * todo： <App/>和App（）的区别，如何导致的这种差异?
+     */
     codeToEval.push(
       `
         import { createRoot } from "react-dom/client";
-        import "./index.css";
-        const App = __modules__["App.jsx"]
+        const App = __modules__["App.jsx"].default;
 
-        createRoot(document.getElementById("root")).render(<App />);
+        createRoot(document.getElementById("root")).render(App());
       `
     );
 
@@ -43,7 +44,6 @@ const Preview = () => {
 
   onMount(() => {
     createSandbox();
-    console.log("preview", store);
   });
 
   onUnMount(() => {
