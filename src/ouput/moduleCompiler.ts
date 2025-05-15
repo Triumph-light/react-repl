@@ -1,7 +1,7 @@
 import { File, ReturnStore } from "../component/repl/storeContext";
 import { transform } from "@babel/standalone";
 import { type NodePath } from "@babel/traverse";
-import type { Program, ExportDefaultDeclaration, Identifier } from "@babel/types";
+import type { ExportDefaultDeclaration, Identifier, ImportDeclaration } from "@babel/types";
 import MagicString from "magic-string";
 
 const modulesKey = '__modules__'
@@ -32,16 +32,20 @@ function processModule(store: ReturnStore, filename: string) {
         plugins: [() => {
             return {
                 visitor: {
-                    Program(path: NodePath<Program>) {
-                        const body = path.node.body;
-                        const index = body.findIndex(node => node.type === 'ExportDefaultDeclaration');
+                    ExportDefaultDeclaration(path: NodePath<ExportDefaultDeclaration>) {
+                        const { node } = path
+                        s.append(`${moduleKey}.default = ${(node.declaration as Identifier).name}\n`)
+                    },
+                    ImportDeclaration(path: NodePath<ImportDeclaration>) {
+                        const { node } = path
+                        const importDefault = node.specifiers.find(specifier => specifier.type === 'ImportDefaultSpecifier')
+                        const moduleName = importDefault?.local.name
+                        const modulePath = node.source.value.replace(/^\.\//, '')
 
-                        if (index !== -1) {
-                            const exportDecl = body[index] as ExportDefaultDeclaration;
-                            const exportedId = (exportDecl.declaration as Identifier).name;
-
-                            s.append(`${moduleKey}.default = ${exportedId}\n`)
+                        if (/^\.\//.test(node.source.value)) {
+                            s.overwrite(node.start!, node.end!, `const ${moduleName} = ${modulesKey}["${modulePath}"].default\n`)
                         }
+
                     }
                 }
             }
