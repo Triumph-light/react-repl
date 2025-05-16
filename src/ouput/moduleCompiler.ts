@@ -9,15 +9,28 @@ const moduleKey = '__module__'
 
 export function compileModulesForPreview(store: ReturnStore) {
     const processed: string[] = []
-    processFile(store, store.files[store.mainFile], processed)
+    const seen = new Set<File>()
+    processFile(store, store.files[store.mainFile], processed, seen)
 
     return processed
 }
 
-function processFile(store: ReturnStore, file: File, processed: string[]) {
-    const { code: js } = processModule(store, file.filename)
+function processFile(store: ReturnStore, file: File, processed: string[], seen: Set<File>) {
+    if (seen.has(file)) {
+        return
+    }
+    seen.add(file)
+
+    const { code: js, importedFiles } = processModule(store, file.filename)
+    processChildFiles(store, importedFiles, processed, seen)
 
     processed.push(js)
+}
+
+function processChildFiles(store: ReturnStore, importedFiles: Set<string>, processed: string[], seen: Set<File>) {
+    for (const filename of importedFiles) {
+        processFile(store, store.files[filename], processed, seen)
+    }
 }
 
 /**
@@ -26,6 +39,8 @@ function processFile(store: ReturnStore, file: File, processed: string[]) {
 function processModule(store: ReturnStore, filename: string) {
     const rawCode = store.files[filename].code
     const s = new MagicString(rawCode)
+
+    const importedFiles = new Set<string>()
 
     let code = transform(rawCode, {
         presets: ['react'],
@@ -42,7 +57,8 @@ function processModule(store: ReturnStore, filename: string) {
                         const moduleName = importDefault?.local.name
                         const modulePath = node.source.value.replace(/^\.\//, '')
 
-                        if (/^\.\//.test(node.source.value)) {
+                        if (node.source.value.startsWith('./')) {
+                            importedFiles.add(modulePath)
                             s.overwrite(node.start!, node.end!, `const ${moduleName} = ${modulesKey}["${modulePath}"].default\n`)
                         }
 
@@ -60,7 +76,6 @@ function processModule(store: ReturnStore, filename: string) {
         filename,
     )}] = { [Symbol.toStringTag]: "Module" }\n\n` + code
 
-    const importedFiles = new Set<string>()
     return {
         code,
         importedFiles
