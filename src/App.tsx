@@ -1,4 +1,4 @@
-import Playground from "./component/playground/Playgroud";
+import Playground from "./component/Playground/Playgroud";
 
 function App() {
   return <Playground />;

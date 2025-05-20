@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
-    <script type="importmap">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vite + React + TS</title>
+  <script type="importmap">
       {
         "imports": {
           "react": "https://esm.sh/react@18.2.0",
@@ -13,19 +14,34 @@
         }
       }
     </script>
-  </head>
+</head>
 
-  <body>
-    <div id="root"></div>
+<body>
+  <div id="root"></div>
 
-    <script type="module">
-      // 渲染编译完成之后的代码
-      window.addEventListener("message", function (e) {
-        const script = document.createElement("script");
-        script.textContent = e.data;
-        script.type = "module";
-        document.body.appendChild(script);
-      });
-    </script>
-  </body>
+  <script type="module">
+    async function handle_message(e) {
+      let { action } = e.data
+      if (action === 'eval') {
+        const { script: scripts } = e.data.args
+
+        for (const script of scripts) {
+          console.log('script', script)
+          const scriptEl = document.createElement("script");
+          const done = new Promise((resolve) => {
+            window.__next__ = resolve
+          })
+          scriptEl.innerHTML = script + `\nwindow.__next__()`
+          scriptEl.type = "module";
+          document.body.appendChild(scriptEl);
+          await done
+        }
+      }
+    }
+
+    // 渲染编译完成之后的代码
+    window.addEventListener("message", handle_message);
+  </script>
+</body>
+
 </html>

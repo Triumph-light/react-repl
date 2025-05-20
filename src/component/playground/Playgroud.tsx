@@ -1,6 +1,6 @@
 import React from "react";
 import "./index.less";
-import Header from "../header";
+import Header from "../Header";
 import Repl from "../repl/Repl";
 
 const Playground = () => {

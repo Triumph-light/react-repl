@@ -1,22 +1,29 @@
 // import Editor from "@monaco-editor/react";
-import { Ref, useEffect, useRef } from "react";
+import { useContext, useEffect, useLayoutEffect, useRef } from "react";
 import * as monaco from "monaco-editor-core";
 import { registerHighlighter } from "./highlight";
+import AutoSaveContext from "../component/repl/autoSaveContext";
+import { useMount, useUnmount } from "ahooks";
 
 interface Props {
   onChange: (code: string) => void;
+  value: string;
 }
 
 const MonacoEditor = (props: Props) => {
-  const { onChange } = props;
+  const { onChange, value } = props;
 
-  const containerRef = useRef(null) as unknown as Ref<HTMLDivElement>;
-  const editorInstance = useRef<monaco.editor.IStandaloneCodeEditor>();
+  const emitChangeEvent = () => {
+    onChange(editorInstance.current?.getValue() || "");
+  }
 
-  useEffect(() => {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const editorInstance = useRef<monaco.editor.IStandaloneCodeEditor>(null);
+
+  useMount(() => {
     const theme = registerHighlighter();
-    console.log(theme.light);
     editorInstance.current = monaco.editor.create(containerRef.current, {
+      value: value,
       language: "jsx",
       fontSize: 13,
       tabSize: 2,
@@ -31,20 +38,35 @@ const MonacoEditor = (props: Props) => {
       fixedOverflowWidgets: true,
       readOnly: false,
       theme: theme.light,
-    });
+    })
+  })
 
+  /** 
+  * autosave
+  */
+  const { autoSave } = useContext(AutoSaveContext);
+  useEffect(() => {
+    let dispose: monaco.IDisposable | undefined;
+    if (autoSave) {
+      dispose = editorInstance.current?.onDidChangeModelContent(emitChangeEvent)
+    }
     return () => {
-      editorInstance.current?.dispose();
-    };
-  }, [monaco]);
+      dispose?.dispose();
+    }
+  }, [autoSave])
+
+  useUnmount(() => {
+    editorInstance.current?.dispose();
+  })
 
   // Windows/Linux: Ctrl + S；Mac：Meta(⌘) + S
-  const emitChangeEvent = (e: KeyboardEvent) => {
-    if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
-      onChange(editorInstance.current?.getValue() || "");
-      e.preventDefault();
+  const handleChange = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "s" && (event.ctrlKey || event.metaKey)) {
+      emitChangeEvent()
+      event.preventDefault();
     }
   };
+
   return (
     <div
       ref={containerRef}
@@ -54,7 +76,7 @@ const MonacoEditor = (props: Props) => {
         width: "100%",
         overflow: "hidden",
       }}
-      onKeyDown={emitChangeEvent}
+      onKeyDown={handleChange}
     ></div>
   );
 };

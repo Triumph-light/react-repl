@@ -12,6 +12,8 @@
   "dependencies": {
     "@babel/standalone": "^7.27.0",
     "@monaco-editor/react": "^4.7.0-rc.0",
+    "ahooks": "^3.8.4",
+    "magic-string": "^0.30.17",
     "monaco-editor": "^0.52.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

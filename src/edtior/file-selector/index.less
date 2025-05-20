@@ -1,0 +1,77 @@
+.file-selector {
+  display: flex;
+  box-sizing: border-box;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--bg);
+  overflow-y: hidden;
+  overflow-x: auto;
+  white-space: nowrap;
+  //   position: relative;
+  height: var(--header-height);
+}
+
+.file {
+  position: relative;
+  display: inline-block;
+  font-size: 13px;
+  font-family: var(--font-code);
+  cursor: pointer;
+  color: var(--text-light);
+  box-sizing: border-box;
+}
+
+.file.active {
+  color: var(--color-branding);
+  border-bottom: 3px solid var(--color-branding);
+  cursor: text;
+}
+
+.file span {
+  display: inline-block;
+  padding: 8px 10px 6px;
+  line-height: 20px;
+}
+
+.file .remove {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 12px;
+  cursor: pointer;
+  padding-left: 0;
+}
+
+.file.pending span {
+  min-width: 50px;
+  min-height: 34px;
+  padding-right: 32px;
+  background-color: rgba(200, 200, 200, 0.2);
+  color: transparent;
+}
+
+.file.pending input {
+  position: absolute;
+  inset: 8px 7px auto;
+  font-size: 13px;
+  font-family: var(--font-code);
+  line-height: 20px;
+  outline: none;
+  border: none;
+  padding: 0 3px;
+  min-width: 1px;
+  color: inherit;
+  background-color: transparent;
+}
+
+.add {
+  display: inline-block;
+  font-size: 18px;
+  font-family: var(--font-code);
+  color: #999;
+  margin-left: 6px;
+  position: relative;
+  top: -1px;
+  line-height: var(--header-height);
+}
+.add:hover {
+  color: var(--color-branding);
+}
