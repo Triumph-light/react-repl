@@ -1,10 +1,10 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import Layout from "../../layout";
-import Preview from "../../ouput/preview";
-import EditorContainer from "../../edtior/edtior-container";
+import Preview from "../../ouput/preview/index.tsx";
+import EditorContainer from "../../edtior/edtior-container/index.tsx";
 import "./index.less";
 import { OutputContext } from "../../ouput/outputContext";
-import StoreContext, { StoreType, useStore } from "./storeContext";
+import StoreContext, { useStore } from "./storeContext";
 import AutoSaveContext from "./autoSaveContext";
 import { useToggle } from "ahooks";
 

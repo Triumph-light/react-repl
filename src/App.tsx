@@ -1,4 +1,4 @@
-import Playground from "./component/Playground/index";
+import Playground from "./component/Playground/index.tsx";
 
 function App() {
   return <Playground />;

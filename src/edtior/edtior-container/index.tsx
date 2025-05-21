@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import MonaceEditor from "../../monaco/index";
+import MonaceEditor from "../../monaco/index.tsx";
 import StoreContext from "../../component/repl/storeContext";
-import FileSelector from "../file-selector";
-import ToggleButton from "../../component/ToggleButton";
+import FileSelector from "../file-selector/index.tsx";
+import ToggleButton from "../../component/ToggleButton/index.tsx";
 
 const EditorContainer = () => {
   const { updateFile, activeFile } = useContext(StoreContext);

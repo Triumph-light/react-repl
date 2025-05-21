@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useRef, useState } from "react";
-import StoreContext, { File } from "../../component/repl/storeContext";
+import StoreContext from "../../component/repl/storeContext";
 import "./index.less";
 const FileSelector = () => {
   const [pending, setPending] = useState<boolean | string>(false);
