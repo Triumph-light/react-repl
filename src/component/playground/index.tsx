@@ -1,7 +1,7 @@
 import React from "react";
 import "./index.less";
-import Header from "../Header/index.tsx";
-import Repl from "../repl/Repl";
+import Header from "../header/index.tsx";
+import Repl from "../repl/Repl.tsx";
 
 const Playground = () => {
   return (
