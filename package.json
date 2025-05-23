@@ -1,6 +1,5 @@
 {
   "name": "@react/repl",
-  "private": true,
   "version": "0.0.1-beta.1",
   "type": "module",
   "author": {
@@ -9,9 +8,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Triumph-light/my-react-playground.git"
+    "url": "git+https://github.com/Triumph-light/react-repl.git"
   },
-  "homepage": "https://github.com/Triumph-light/my-react-playground#readme",
+  "homepage": "https://github.com/Triumph-light/react-repl#readme",
+  "bugs": {
+    "url": "https://github.com/Triumph-light/react-repl/issues"
+  },
   "license": "MIT",
   "description": "react playground， 和vue-repl 一样的一个项目",
   "module": "./dist/react-repl.js",
