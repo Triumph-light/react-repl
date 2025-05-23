@@ -1,5 +1,5 @@
 {
-  "name": "my-react-playground",
+  "name": "@react/repl",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -14,11 +14,16 @@
   "homepage": "https://github.com/Triumph-light/my-react-playground#readme",
   "license": "MIT",
   "description": "react playground， 和vue-repl 一样的一个项目",
+  "module": "./dist/react-repl.js",
+  "exports": {
+    "./package.json": "./package.json"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "release": "npm run build && bumpp && npm publish"
   },
   "dependencies": {
     "@babel/standalone": "^7.27.0",
@@ -27,7 +32,8 @@
     "magic-string": "^0.30.17",
     "monaco-editor": "^0.52.2",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "vite-plugin-dts": "^4.5.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

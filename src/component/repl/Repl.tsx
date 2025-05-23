@@ -8,7 +8,9 @@ import StoreContext, { useStore } from "./storeContext";
 import AutoSaveContext from "./autoSaveContext";
 import { useToggle } from "ahooks";
 
-const Repl = () => {
+export interface ReplProps { }
+
+const Repl = (props: ReplProps) => {
   const previewRef = useRef(null);
 
   const store = useStore();
