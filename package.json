@@ -3,6 +3,17 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "author": {
+    "name": "Triumph-light",
+    "email": "2495685883@qq.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Triumph-light/my-react-playground.git"
+  },
+  "homepage": "https://github.com/Triumph-light/my-react-playground#readme",
+  "license": "MIT",
+  "description": "react playground， 和vue-repl 一样的一个项目",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
