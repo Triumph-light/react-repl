@@ -1,5 +1,5 @@
 {
-  "name": "@react/repl",
+  "name": "react-repl-plus",
   "version": "0.0.1-beta.1",
   "type": "module",
   "author": {
@@ -20,11 +20,15 @@
   "exports": {
     "./package.json": "./package.json"
   },
+  "publishConfig": {
+    "access": "public",
+    "tag": "latest"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
+    "preview": "vite build -c vite.preview.config.ts",
     "release": "npm run build && bumpp && npm publish"
   },
   "dependencies": {
