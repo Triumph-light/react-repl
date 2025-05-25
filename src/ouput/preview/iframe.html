@@ -26,7 +26,6 @@
         const { script: scripts } = e.data.args
 
         for (const script of scripts) {
-          console.log('script', script)
           const scriptEl = document.createElement("script");
           const done = new Promise((resolve) => {
             window.__next__ = resolve

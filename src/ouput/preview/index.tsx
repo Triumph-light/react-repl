@@ -1,4 +1,4 @@
-import { forwardRef, useContext, useRef } from "react";
+import { useContext, useRef } from "react";
 import iframeRaw from "./iframe.html?raw";
 import { onMount, onUnMount } from "../../hooks/index";
 import "./index.less";
@@ -53,4 +53,4 @@ const Preview = () => {
   return <div className="iframe-container" ref={containerRef} />;
 };
 
-export default forwardRef(Preview);
+export default Preview;

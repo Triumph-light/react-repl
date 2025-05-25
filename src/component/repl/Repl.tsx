@@ -11,8 +11,6 @@ import { useToggle } from "ahooks";
 export interface ReplProps { }
 
 const Repl = (props: ReplProps) => {
-  const previewRef = useRef(null);
-
   const store = useStore();
   const [autoSave, { toggle: toggleAutoSave }] = useToggle(true)
 
@@ -20,12 +18,10 @@ const Repl = (props: ReplProps) => {
     <div className="react-repl">
       <AutoSaveContext.Provider value={{ autoSave, toggleAutoSave }}>
         <StoreContext.Provider value={store}>
-          <OutputContext.Provider value={previewRef}>
-            <Layout>
-              <EditorContainer></EditorContainer>
-              <Preview ref={previewRef}></Preview>
-            </Layout>
-          </OutputContext.Provider>
+          <Layout>
+            <EditorContainer></EditorContainer>
+            <Preview></Preview>
+          </Layout>
         </StoreContext.Provider>
       </AutoSaveContext.Provider>
     </div>
