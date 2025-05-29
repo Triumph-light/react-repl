@@ -1,17 +1,22 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import './index.less';
-import AutoSaveContext from '../repl/autoSaveContext';
+import { useControllableValue } from 'ahooks';
 
 interface ToggleButtonProps {
-  text: string;
+  text?: string;
+  value?: boolean
+  onChange?: (value: boolean) => void
 }
 
-const ToggleButton = ({ text }: ToggleButtonProps) => {
-  const { autoSave, toggleAutoSave } = useContext(AutoSaveContext)
+const ToggleButton = (props: ToggleButtonProps) => {
+  const { text } = props
+  const [active, setActive] = useControllableValue<boolean>(props, {
+    defaultValue: false
+  })
   return (
-    <div className='wrapper' onClick={toggleAutoSave}>
+    <div className='wrapper' onClick={() => setActive(pre => !pre)}>
       <span>{text}</span>
-      <div className={`toggle ${autoSave && 'active'}`}>
+      <div className={`toggle ${active && 'active'}`}>
         <div className='indicator'></div>
       </div>
     </div>

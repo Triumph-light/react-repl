@@ -12,11 +12,11 @@ export interface ReplProps { }
 
 const Repl = (props: ReplProps) => {
   const store = useStore();
-  const [autoSave, { toggle: toggleAutoSave }] = useToggle(true)
+  const [autoSave, { set: setAutoSave }] = useToggle(true)
 
   return (
     <div className="react-repl">
-      <AutoSaveContext.Provider value={{ autoSave, toggleAutoSave }}>
+      <AutoSaveContext.Provider value={{ autoSave, setAutoSave }}>
         <StoreContext.Provider value={store}>
           <Layout>
             <EditorContainer></EditorContainer>

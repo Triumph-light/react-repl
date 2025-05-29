@@ -1,5 +1,5 @@
 import { Actions } from 'ahooks/lib/useToggle';
 import { createContext } from 'react';
 
-const AutoSaveContext = createContext<{ autoSave: boolean, toggleAutoSave: Actions<boolean>['toggle'] }>();
+const AutoSaveContext = createContext<{ autoSave: boolean, setAutoSave: Actions<boolean>['set'] }>();
 export default AutoSaveContext
