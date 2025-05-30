@@ -4,6 +4,7 @@ import * as monaco from "monaco-editor-core";
 import { registerHighlighter } from "./highlight";
 import AutoSaveContext from "../component/repl/autoSaveContext";
 import { useMount, useUnmount } from "ahooks";
+import ThemeContext from "../component/repl/themeContext";
 
 interface Props {
   onChange: (code: string) => void;
@@ -12,6 +13,7 @@ interface Props {
 
 const MonacoEditor = (props: Props) => {
   const { onChange, value } = props;
+  const propsTheme = useContext(ThemeContext)
 
   const emitChangeEvent = () => {
     onChange(editorInstance.current?.getValue() || "");
@@ -37,7 +39,7 @@ const MonacoEditor = (props: Props) => {
       },
       fixedOverflowWidgets: true,
       readOnly: false,
-      theme: theme.light,
+      theme: propsTheme === 'light' ? theme.light : theme.dark,
     })
   })
 

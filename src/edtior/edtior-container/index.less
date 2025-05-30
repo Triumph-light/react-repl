@@ -1,0 +1,19 @@
+.editor-container {
+  height: calc(100% - var(--header-height));
+  overflow: hidden;
+  position: relative;
+}
+
+.editor-floating {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  z-index: 11;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  gap: 8px;
+  background-color: var(--bg);
+  color: var(--text-light);
+  padding: 8px;
+}
