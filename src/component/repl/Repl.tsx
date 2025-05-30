@@ -8,11 +8,18 @@ import StoreContext, { useStore } from "./storeContext";
 import AutoSaveContext from "./autoSaveContext";
 import { useToggle } from "ahooks";
 
-export interface ReplProps { }
+export interface ReplProps {
+  /**
+   * 是否自动保存
+   * @default true
+   */
+  autoSave: boolean
+}
 
 const Repl = (props: ReplProps) => {
+  const { autoSave: defaultAutoSave = true } = props;
   const store = useStore();
-  const [autoSave, { set: setAutoSave }] = useToggle(true)
+  const [autoSave, { set: setAutoSave }] = useToggle(defaultAutoSave)
 
   return (
     <div className="react-repl">
