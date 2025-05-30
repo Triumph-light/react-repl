@@ -1,5 +1,4 @@
-// import Editor from "@monaco-editor/react";
-import { useContext, useEffect, useLayoutEffect, useRef } from "react";
+import { KeyboardEvent, useContext, useEffect, useRef } from "react";
 import * as monaco from "monaco-editor-core";
 import { registerHighlighter } from "./highlight";
 import AutoSaveContext from "../component/repl/autoSaveContext";
@@ -21,26 +20,32 @@ const MonacoEditor = (props: Props) => {
 
   const containerRef = useRef<HTMLDivElement>(null)
   const editorInstance = useRef<monaco.editor.IStandaloneCodeEditor>(null);
+  const theme = registerHighlighter();
+
+  const initMonacoEditor = () => {
+    if (containerRef.current) {
+      editorInstance.current = monaco.editor.create(containerRef.current, {
+        value: value,
+        language: "jsx",
+        fontSize: 13,
+        tabSize: 2,
+        automaticLayout: true,
+        scrollBeyondLastLine: false,
+        minimap: {
+          enabled: false,
+        },
+        inlineSuggest: {
+          enabled: false,
+        },
+        fixedOverflowWidgets: true,
+        readOnly: false,
+        theme: propsTheme === 'light' ? theme.light : theme.dark,
+      })
+    }
+  }
 
   useMount(() => {
-    const theme = registerHighlighter();
-    editorInstance.current = monaco.editor.create(containerRef.current, {
-      value: value,
-      language: "jsx",
-      fontSize: 13,
-      tabSize: 2,
-      automaticLayout: true,
-      scrollBeyondLastLine: false,
-      minimap: {
-        enabled: false,
-      },
-      inlineSuggest: {
-        enabled: false,
-      },
-      fixedOverflowWidgets: true,
-      readOnly: false,
-      theme: propsTheme === 'light' ? theme.light : theme.dark,
-    })
+    initMonacoEditor()
   })
 
   /** 
@@ -57,12 +62,20 @@ const MonacoEditor = (props: Props) => {
     }
   }, [autoSave])
 
+  /**
+   * theme toggle
+   */
+  const propTheme = useContext(ThemeContext)
+  useEffect(() => {
+    monaco.editor.setTheme(propTheme === 'light' ? theme.light : theme.dark)
+  }, [propTheme])
+
   useUnmount(() => {
     editorInstance.current?.dispose();
   })
 
   // Windows/Linux: Ctrl + S；Mac：Meta(⌘) + S
-  const handleChange = (event: KeyboardEvent<HTMLDivElement>) => {
+  const handleChange = (event: KeyboardEvent) => {
     if (event.key === "s" && (event.ctrlKey || event.metaKey)) {
       emitChangeEvent()
       event.preventDefault();
