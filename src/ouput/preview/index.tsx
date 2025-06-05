@@ -8,7 +8,7 @@ import { compileModulesForPreview } from "../moduleCompiler";
 
 const Preview = () => {
   const store = useContext(StoreContext);
-  const importMap = JSON.parse(store.files[importMapFile]?.code || '{}')
+  const importMap = store.getImportMap()
 
   const proxy = useRef<PreviewProxy | null>(null);
 

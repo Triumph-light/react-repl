@@ -11,7 +11,7 @@ const FileSelector = () => {
   const { files, activeFilename, renameFile, addFile, deleteFile, setActive } =
     store!;
 
-  const filenames = Object.entries(files).map(([name]) => name);
+  const filenames = Object.entries(files).filter(([name]) => name !== importMapFile).map(([name]) => name);
 
   const startAddFile = () => {
     let i = 0;

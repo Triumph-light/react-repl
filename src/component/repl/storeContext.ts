@@ -173,7 +173,6 @@ export function useStore({
         } else {
             newFiles[importMapFile] = new File(importMapFile, code)
         }
-        console.log('newFiles', newFiles)
 
         setValue({
             ...value,
@@ -199,7 +198,8 @@ export function useStore({
         renameFile,
         updateFile,
         setActive,
-        builtinImportMap
+        builtinImportMap,
+        getImportMap
     }
 }
 
