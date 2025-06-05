@@ -2,19 +2,23 @@ import { useContext, useRef } from "react";
 import iframeRaw from "./iframe.html?raw";
 import { onMount, onUnMount } from "../../hooks/index";
 import "./index.less";
-import StoreContext from "../../component/repl/storeContext";
+import StoreContext, { importMapFile } from "../../component/repl/storeContext";
 import { PreviewProxy } from "../PreviewProxy";
 import { compileModulesForPreview } from "../moduleCompiler";
 
 const Preview = () => {
   const store = useContext(StoreContext);
+  const importMap = JSON.parse(store.files[importMapFile]?.code || '{}')
+
   const proxy = useRef<PreviewProxy | null>(null);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const sandbox = useRef<HTMLIFrameElement | null>(null);
   const createSandbox = () => {
     sandbox.current = document.createElement("iframe");
-    sandbox.current.srcdoc = iframeRaw;
+    const sandboxSrc = iframeRaw.replace(/<!--IMPORT_MAP-->/, JSON.stringify(importMap))
+
+    sandbox.current.srcdoc = sandboxSrc;
     containerRef.current?.appendChild(sandbox.current);
     proxy.current = new PreviewProxy(sandbox.current);
     sandbox.current.addEventListener("load", () => {

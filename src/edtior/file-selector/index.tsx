@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useRef, useState } from "react";
-import StoreContext from "../../component/repl/storeContext";
+import StoreContext, { importMapFile } from "../../component/repl/storeContext";
 import "./index.less";
 const FileSelector = () => {
   const [pending, setPending] = useState<boolean | string>(false);
@@ -118,6 +118,12 @@ const FileSelector = () => {
       <span className="add" onClick={startAddFile}>
         +
       </span>
+
+      <div className="import-map-wrapper">
+        <div className={`file ${activeFilename === importMapFile && "active"}`} onClick={() => setActive(importMapFile)}>
+          <span className="label">Import Map</span>
+        </div>
+      </div>
     </div>
   );
 };

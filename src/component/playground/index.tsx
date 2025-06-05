@@ -5,7 +5,7 @@ import Repl from "../repl/Repl.tsx";
 import { Theme } from "../../types.ts";
 
 const Playground = () => {
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useState<Theme>("dark");
 
   useEffect(() => {
     document.documentElement.className = theme;

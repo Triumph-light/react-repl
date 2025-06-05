@@ -1,6 +1,8 @@
 import { createContext, useState } from "react";
 import welcomeCode from '../../template/welcome.jsx?raw'
 import templateCode from '../../template/template.jsx?raw'
+import { ImportMap, mergeImportMap, useReactImportMap } from "../../import-map";
+import { useMount } from "ahooks";
 
 export class File {
     constructor(public filename: string, public code: string) { }
@@ -20,6 +22,8 @@ export interface ReturnStore extends StoreParams {
     renameFile: (oldFilename: string, newFilename: string) => void
     updateFile: (code: string) => void
     setActive: (filename: string) => void
+
+    getImportMap(): ImportMap
 };
 
 type StoreParams = {
@@ -31,10 +35,13 @@ type StoreParams = {
     }
     mainFile: string
     activeFilename: string
+    builtinImportMap: ImportMap
 
 }
 
 type StoreValue = Pick<ReturnStore, | 'files' | 'activeFilename'>
+
+export const importMapFile = 'import-map.json'
 
 export function useStore({
     files = undefined,
@@ -43,7 +50,8 @@ export function useStore({
         templateCode
     },
     mainFile = 'App.jsx',
-    activeFilename = undefined
+    activeFilename = undefined,
+    builtinImportMap = undefined!
 }: Partial<StoreParams> = {}): ReturnStore {
     function init() {
 
@@ -144,7 +152,42 @@ export function useStore({
         })
     }
 
+    const getImportMap = () => {
+        try {
+            return JSON.parse(filesValue[importMapFile].code)
+        } catch (e) {
+            console.log(e)
+        }
+        return {}
+    }
+    const setImportMap = (map: ImportMap) => {
+        if (map.imports) {
+            for (const [key, value] of Object.entries(map.imports)) {
+                map.imports[key] = value
+            }
+        }
+        const code = JSON.stringify(map, undefined, 2)
+        const newFiles = { ...filesValue }
+        if (filesValue[importMapFile]) {
+            newFiles[importMapFile].code = code
+        } else {
+            newFiles[importMapFile] = new File(importMapFile, code)
+        }
+        console.log('newFiles', newFiles)
 
+        setValue({
+            ...value,
+            files: newFiles
+        })
+    }
+    const applyBuiltinImportMap = (builtinImportMap: ImportMap) => {
+        const importMap = mergeImportMap(builtinImportMap, getImportMap())
+        setImportMap(importMap)
+    }
+    ({ importMap: builtinImportMap } = useReactImportMap())
+    useMount(() => {
+        applyBuiltinImportMap(builtinImportMap)
+    })
 
     return {
         ...value,
@@ -155,7 +198,8 @@ export function useStore({
         deleteFile,
         renameFile,
         updateFile,
-        setActive
+        setActive,
+        builtinImportMap
     }
 }
 
