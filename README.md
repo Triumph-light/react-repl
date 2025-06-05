@@ -11,5 +11,10 @@ export interface ReplProps {
    * @default true
    */
   autoSave: boolean;
+  /**
+   * 主题色
+   * @default "light"
+   */
+  theme: Theme;
 }
 ```
