@@ -4,6 +4,7 @@ import Sun from '../../assets/sun'
 import { useControllableValue } from "ahooks";
 import Moon from "../../assets/moon";
 import Github from "../../assets/github";
+import ReactLogo from "../../assets/react";
 
 interface HeaderProps {
   theme?: 'light' | 'dark';
@@ -23,21 +24,7 @@ const Header = (props: HeaderProps) => {
   return (
     <nav>
       <h1>
-        <svg
-          width="30px"
-          height="30px"
-          viewBox="-10.5 -9.45 21 18.9"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          style={{ color: `rgba(8, 126, 164, 1)` }}
-        >
-          <circle cx="0" cy="0" r="2" fill="currentColor"></circle>
-          <g stroke="currentColor" stroke-width="1" fill="none">
-            <ellipse rx="10" ry="4.5"></ellipse>
-            <ellipse rx="10" ry="4.5" transform="rotate(60)"></ellipse>
-            <ellipse rx="10" ry="4.5" transform="rotate(120)"></ellipse>
-          </g>
-        </svg>
+        <ReactLogo></ReactLogo>
         <span>React Playground</span>
       </h1>
       <div className="links">
