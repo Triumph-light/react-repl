@@ -6,6 +6,11 @@
     "name": "Triumph-light",
     "email": "2495685883@qq.com"
   },
+  "keywords": [
+    "react",
+    "react-playground",
+    "react-repl"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Triumph-light/react-repl.git"
@@ -15,7 +20,7 @@
     "url": "https://github.com/Triumph-light/react-repl/issues"
   },
   "license": "MIT",
-  "description": "react playground， 和vue-repl 一样的一个项目",
+  "description": "React component for editing React components, it is similar to vue repl",
   "module": "./dist/react-repl.js",
   "exports": {
     "./package.json": "./package.json"

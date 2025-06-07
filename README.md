@@ -1,6 +1,8 @@
 # React Repl
 
-这是一个参照 Vue 项目中的 Vue playground 从而实现的 React playground。
+React component for editing React components, it is similar to vue repl。
+
+You can experience React Playground online on react-repl-vercel.app(https://react-repl.vercel.app/)
 
 # Props
 
