@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useRef, useState } from "react";
+import React, { EventHandler, Fragment, useContext, useRef, useState } from "react";
 import StoreContext, { importMapFile } from "../../component/repl/storeContext";
 import "./index.less";
 const FileSelector = () => {
@@ -12,7 +12,7 @@ const FileSelector = () => {
     store!;
 
   const filenames = Object.entries(files).filter(([name]) => name !== importMapFile).map(([name]) => name);
-
+  console.log(files, filenames)
   const startAddFile = () => {
     let i = 0;
     let name = "Comp.jsx";
@@ -72,6 +72,11 @@ const FileSelector = () => {
     setPending(file);
   };
 
+  const handleDelete = (e: Event, file: string) => {
+    e.stopPropagation()
+    deleteFile(file)
+  }
+
   return (
     <div className="file-selector">
       {filenames?.map((file, index) => (
@@ -84,7 +89,7 @@ const FileSelector = () => {
             >
               <span className="label">{file}</span>
               {index > 0 && (
-                <span className="remove" onClick={() => deleteFile(file)}>
+                <span className="remove" onClick={(e) => handleDelete(e as unknown as Event, file)}>
                   <svg
                     className="icon"
                     width="12"

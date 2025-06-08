@@ -91,16 +91,26 @@ export function useStore({
             !confirm(`Are you sure you want to delete ${filename}?`)
         ) return
 
+        const newFiles = {}
+        for (const key in filesValue) {
+            if (filename === key) {
+                continue
+            }
+            newFiles[key] = filesValue[key]
+        }
+        console.log(newFiles)
+
         if (activeFilenameValue === filename) {
             setValue({
-                ...value,
-                activeFilename: mainFile
+                activeFilename: mainFile,
+                files: newFiles
             })
+            return
+        } else {
+            setValue({ ...value, files: newFiles })
         }
 
-        const newFiles = { ...filesValue }
-        delete newFiles[filename]
-        setValue({ ...value, files: newFiles })
+
     }
 
     const renameFile: ReturnStore['renameFile'] = (oldFilename, newFilename) => {
@@ -187,7 +197,7 @@ export function useStore({
     useMount(() => {
         applyBuiltinImportMap(builtinImportMap)
     })
-
+    console.log(value)
     return {
         ...value,
         activeFile,
