@@ -12,7 +12,7 @@ const FileSelector = () => {
     store!;
 
   const filenames = Object.entries(files).filter(([name]) => name !== importMapFile).map(([name]) => name);
-  console.log(files, filenames)
+
   const startAddFile = () => {
     let i = 0;
     let name = "Comp.jsx";

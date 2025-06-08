@@ -98,7 +98,6 @@ export function useStore({
             }
             newFiles[key] = filesValue[key]
         }
-        console.log(newFiles)
 
         if (activeFilenameValue === filename) {
             setValue({
@@ -197,7 +196,7 @@ export function useStore({
     useMount(() => {
         applyBuiltinImportMap(builtinImportMap)
     })
-    console.log(value)
+
     return {
         ...value,
         activeFile,
