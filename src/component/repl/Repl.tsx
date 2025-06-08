@@ -1,5 +1,5 @@
 import React from "react";
-import Layout from "../../layout";
+import SplitPane from "../../split-pane/index.tsx";
 import Preview from "../../ouput/preview/index.tsx";
 import EditorContainer from "../../edtior/edtior-container/index.tsx";
 import "./index.less";
@@ -32,10 +32,10 @@ const Repl = (props: ReplProps) => {
       <ThemeContext.Provider value={theme}>
         <AutoSaveContext.Provider value={{ autoSave, setAutoSave }}>
           <StoreContext.Provider value={store}>
-            <Layout>
+            <SplitPane>
               <EditorContainer></EditorContainer>
               <Preview></Preview>
-            </Layout>
+            </SplitPane>
           </StoreContext.Provider>
         </AutoSaveContext.Provider></ThemeContext.Provider>
     </div>
