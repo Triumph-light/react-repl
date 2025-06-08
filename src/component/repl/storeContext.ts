@@ -53,14 +53,13 @@ export function useStore({
     activeFilename = undefined,
     builtinImportMap = undefined!
 }: Partial<StoreParams> = {}): ReturnStore {
-    function init() {
-
-    }
+    ({ importMap: builtinImportMap } = useReactImportMap())
 
     const [value, setValue] = useState<StoreValue>(() => {
         files = files || {
             [mainFile]: new File(mainFile, template.welcomeCode)
         }
+        files[importMapFile] = new File(importMapFile, JSON.stringify(builtinImportMap, null, 2))
         return {
             files,
             activeFilename: activeFilename || mainFile
