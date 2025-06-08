@@ -57,7 +57,7 @@ const SplitPane = (props: PropsWithChildren) => {
         <div className="dragger" onMouseDown={dragStart}></div>
       </div>
       <div className="right" style={{ ['width']: 100 - boundSplit + '%' }}>
-        <div className="view-size">{splitInfo.viewWidth}px x {splitInfo.viewHeight}px</div>
+        {dragging && <div className="view-size" >{splitInfo.viewWidth}px x {splitInfo.viewHeight}px</div>}
         {rightNode}</div>
     </div>
   );

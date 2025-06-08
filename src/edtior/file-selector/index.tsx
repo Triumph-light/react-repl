@@ -1,4 +1,4 @@
-import React, { EventHandler, Fragment, useContext, useRef, useState } from "react";
+import React, { Fragment, useContext, useRef, useState } from "react";
 import StoreContext, { importMapFile } from "../../component/repl/storeContext";
 import "./index.less";
 const FileSelector = () => {

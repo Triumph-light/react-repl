@@ -3,9 +3,12 @@ import "./index.less";
 import Header from "../header/index.tsx";
 import Repl from "../repl/Repl.tsx";
 import { Theme } from "../../types.ts";
+import { useStore } from "../repl/storeContext.ts";
 
 const Playground = () => {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("light");
+
+  const store = useStore();
 
   useEffect(() => {
     document.documentElement.className = theme;
@@ -17,7 +20,7 @@ const Playground = () => {
   return (
     <div className="playground-container">
       <Header theme={theme} onChangeTheme={(value) => setTheme(value)}></Header>
-      <Repl theme={theme}></Repl>
+      <Repl store={store} theme={theme}></Repl>
     </div>
   );
 };
