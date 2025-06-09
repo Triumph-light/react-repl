@@ -9,14 +9,23 @@ You can experience React Playground online on react-repl-vercel.app(https://reac
 ```ts
 export interface ReplProps {
   /**
+   * 全局数据
+   */
+  store?: ReplStore;
+  /**
    * 是否自动保存
    * @default true
    */
-  autoSave: boolean;
+  autoSave?: boolean;
   /**
    * 主题色
    * @default "light"
    */
-  theme: Theme;
+  theme?: Theme;
+  /**
+   * 布局
+   * @default 'horizontal'
+   */
+  layout?: "horizontal" | "vertical";
 }
 ```

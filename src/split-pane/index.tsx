@@ -1,8 +1,13 @@
 import React, { PropsWithChildren, useRef, useState } from "react";
 import "./index.less";
 
-const SplitPane = (props: PropsWithChildren) => {
-  const { children } = props;
+interface SplitPaneProps {
+  layout?: 'horizontal' | 'vertical'
+}
+
+const SplitPane = (props: PropsWithChildren<SplitPaneProps>) => {
+  const { children, layout } = props;
+  const isVertical = layout === 'vertical'
   const containerRef = useRef<HTMLDivElement>(null)
   const [dragging, setDragging] = useState<boolean>(false)
 
@@ -17,10 +22,17 @@ const SplitPane = (props: PropsWithChildren) => {
   const leftNode = children[0] || null;
   const rightNode = children[1] || null;
 
-  const totalSize = containerRef.current?.clientWidth || 0
   const boundSplit = splitInfo.split < 20 ? 20 : splitInfo.split > 80 ? 80 : splitInfo.split;
-  const viewWidth = Math.floor(boundSplit * totalSize / 100)
-  const viewHeight = containerRef.current?.clientHeight || 0
+  let totalSize: number, viewHeight: number, viewWidth: number
+  if (isVertical) {
+    totalSize = containerRef.current?.clientHeight || 0
+    viewWidth = containerRef.current?.clientWidth || 0
+    viewHeight = Math.floor(boundSplit * totalSize / 100)
+  } else {
+    totalSize = containerRef.current?.clientWidth || 0
+    viewWidth = Math.floor(boundSplit * totalSize / 100)
+    viewHeight = containerRef.current?.clientHeight || 0
+  }
 
   let startPosition = 0
   let startSplit = 0
@@ -28,12 +40,13 @@ const SplitPane = (props: PropsWithChildren) => {
     e.preventDefault()
     setDragging(true)
     startSplit = splitInfo.split
-    startPosition = e.pageX
+    startPosition = isVertical ? e.pageY : e.pageX
   }
 
   const dragMove = (e: React.MouseEvent) => {
     if (containerRef.current && dragging) {
-      const split = startSplit + (e.pageX - startPosition) / totalSize * 100
+      const moveEnd = isVertical ? e.pageY : e.pageX
+      const split = startSplit + (moveEnd - startPosition) / totalSize * 100
       setSplitInfo({
         split,
       })
@@ -45,17 +58,17 @@ const SplitPane = (props: PropsWithChildren) => {
   }
 
   return (
-    <div className={`split-pane ${dragging && 'dragging'}`}
+    <div className={`split-pane ${dragging && 'dragging'} ${isVertical && 'vertical'}`}
       ref={containerRef}
       onMouseMove={dragMove}
       onMouseLeave={dragEnd}
       onMouseUp={dragEnd}
     >
-      <div className="left" style={{ ['width']: boundSplit + '%' }}>
+      <div className="left" style={{ [!isVertical ? 'width' : 'height']: boundSplit + '%' }}>
         {leftNode}
         <div className="dragger" onMouseDown={dragStart}></div>
       </div>
-      <div className="right" style={{ ['width']: 100 - boundSplit + '%' }}>
+      <div className="right" style={{ [!isVertical ? 'width' : 'height']: 100 - boundSplit + '%' }}>
         {dragging && <div className="view-size" >{viewWidth}px x {viewHeight}px</div>}
         {rightNode}</div>
     </div>

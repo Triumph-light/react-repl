@@ -4,6 +4,15 @@ import Header from "../header/index.tsx";
 import Repl from "../repl/Repl.tsx";
 import { Theme } from "../../types.ts";
 import { useStore } from "../repl/storeContext.ts";
+import { useMount } from "ahooks";
+
+function isMobile() {
+  const userAgent = navigator.userAgent;
+  const isMobileUA = /Mobi|Android|iPhone|iPad|iPod|Mobile/i.test(userAgent);
+  const isSmallScreen = window.innerWidth <= 768;
+  return isMobileUA || isSmallScreen;
+}
+
 const Playground = () => {
   const [theme, setTheme] = useState<Theme>("light");
 
@@ -23,10 +32,19 @@ const Playground = () => {
       document.documentElement.className = "";
     }
   }, [theme])
+
+  /**
+   * mobile 模式下，改成竖向布局
+   */
+  let layout
+  useMount(() => {
+    if (isMobile()) layout = "vertical"
+  })
+
   return (
     <div className="playground-container">
       <Header theme={theme} onChangeTheme={(value) => setTheme(value)}></Header>
-      <Repl store={store} theme={theme}></Repl>
+      <Repl store={store} theme={theme} layout={layout}></Repl>
     </div>
   );
 };

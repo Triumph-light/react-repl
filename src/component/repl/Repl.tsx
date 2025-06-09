@@ -23,11 +23,16 @@ export interface ReplProps {
    * 主题色
    * @default "light"
    */
-  theme?: Theme
+  theme?: Theme,
+  /**
+   * 布局
+   * @default 'horizontal'
+   */
+  layout?: 'horizontal' | 'vertical'
 }
 
 const Repl = (props: ReplProps) => {
-  const { autoSave: defaultAutoSave = true, theme = 'light', store } = props;
+  const { autoSave: defaultAutoSave = true, theme = 'light', store, layout = 'horizontal' } = props;
   const [autoSave, { set: setAutoSave }] = useToggle(defaultAutoSave)
 
   /**
@@ -40,7 +45,7 @@ const Repl = (props: ReplProps) => {
       <ThemeContext.Provider value={theme}>
         <AutoSaveContext.Provider value={{ autoSave, setAutoSave }}>
           <StoreContext.Provider value={store || innerStore}>
-            <SplitPane>
+            <SplitPane layout={layout}>
               <EditorContainer></EditorContainer>
               <Preview></Preview>
             </SplitPane>
