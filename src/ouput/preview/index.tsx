@@ -28,18 +28,22 @@ const Preview = () => {
 
   function updatePreview() {
     const modules = compileModulesForPreview(store);
-
-    const codeToEval = [`window.__modules__ = {}`, ...modules];
+    const codeToEval = [`
+        import * as React from 'react'
+        window.__modules__ = {};
+        window.React = React;
+      `, ...modules];
 
     /**
      * todo： <App/>和App（）的区别，如何导致的这种差异?
      */
     codeToEval.push(
       `
+        import React from 'react'
         import { createRoot } from "react-dom/client";
-        const App = __modules__["App.jsx"].default;
+        const App = __modules__["${store.mainFile}"].default;
 
-        createRoot(document.getElementById("root")).render(App());
+        createRoot(document.getElementById("root")).render(React.createElement(App));
       `
     );
 
