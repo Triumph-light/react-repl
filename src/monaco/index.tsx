@@ -71,6 +71,14 @@ const MonacoEditor = (props: Props) => {
     monaco.editor.setTheme(theme.current![propTheme])
   }, [propTheme])
 
+  /**
+   * value change
+   */
+  useUpdateEffect(() => {
+    if (editorInstance.current && value !== editorInstance.current.getValue())
+      editorInstance.current.setValue(value)
+  }, [value])
+
   useUnmount(() => {
     editorInstance.current?.dispose();
   })

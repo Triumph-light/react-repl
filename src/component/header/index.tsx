@@ -5,6 +5,7 @@ import { useControllableValue } from "ahooks";
 import Moon from "../../assets/moon";
 import Github from "../../assets/github";
 import ReactLogo from "../../assets/react";
+import Share from "../../assets/share";
 
 interface HeaderProps {
   theme?: 'light' | 'dark';
@@ -21,6 +22,11 @@ const Header = (props: HeaderProps) => {
     setTheme(theme === 'light' ? 'dark' : 'light');
   }
 
+  const copyClick = async () => {
+    await navigator.clipboard.writeText(location.href)
+    alert('Sharable URL has been copied to clipboard.')
+  }
+
   return (
     <nav>
       <h1>
@@ -28,6 +34,9 @@ const Header = (props: HeaderProps) => {
         <span>React Playground</span>
       </h1>
       <div className="links">
+        <button title="Copy sharable URL" className="share" onClick={copyClick}>
+          <Share />
+        </button>
         <button className="toggle-dark" onClick={handleToggleTheme}>
           {theme === 'light' ? <Sun></Sun> : <Moon></Moon>}
         </button>

@@ -3,7 +3,7 @@ import SplitPane from "../../split-pane/index.tsx";
 import Preview from "../../ouput/preview/index.tsx";
 import EditorContainer from "../../edtior/edtior-container/index.tsx";
 import "./index.less";
-import StoreContext, { ReturnStore, useStore } from "./storeContext";
+import StoreContext, { ReplStore, useStore } from "./storeContext";
 import AutoSaveContext from "./autoSaveContext";
 import { useToggle } from "ahooks";
 import ThemeContext from "./themeContext.ts";
@@ -13,7 +13,7 @@ export interface ReplProps {
   /**
    * 全局数据
    */
-  store?: ReturnStore,
+  store?: ReplStore,
   /**
    * 是否自动保存
    * @default true
