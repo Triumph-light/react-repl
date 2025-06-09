@@ -1,23 +1,25 @@
 import { KeyboardEvent, useContext, useEffect, useRef } from "react";
-import * as monaco from "monaco-editor-core";
+import * as monaco from "monaco-editor";
 import { registerHighlighter } from "./highlight";
 import AutoSaveContext from "../component/repl/autoSaveContext";
 import { useMount, useUnmount, useUpdateEffect } from "ahooks";
 import ThemeContext from "../component/repl/themeContext";
+import { initMonaco } from "./env";
 
 interface Props {
   onChange: (code: string) => void;
   value: string;
+  language?: string;
 }
 
 const MonacoEditor = (props: Props) => {
-  const { onChange, value } = props;
+  const { onChange, value, language } = props;
   const propTheme = useContext(ThemeContext)
 
   const emitChangeEvent = () => {
     onChange(editorInstance.current?.getValue() || "");
   }
-
+  initMonaco()
   const containerRef = useRef<HTMLDivElement>(null)
   const editorInstance = useRef<monaco.editor.IStandaloneCodeEditor>(null);
 
@@ -27,7 +29,7 @@ const MonacoEditor = (props: Props) => {
     if (containerRef.current) {
       editorInstance.current = monaco.editor.create(containerRef.current, {
         value: value,
-        language: "jsx",
+        language,
         fontSize: 13,
         tabSize: 2,
         automaticLayout: true,
@@ -40,8 +42,7 @@ const MonacoEditor = (props: Props) => {
         },
         fixedOverflowWidgets: true,
         readOnly: false,
-        // theme: theme['light']
-        theme: theme.current[propTheme]
+        theme: theme.current[propTheme],
       })
     }
   }
@@ -78,6 +79,16 @@ const MonacoEditor = (props: Props) => {
     if (editorInstance.current && value !== editorInstance.current.getValue())
       editorInstance.current.setValue(value)
   }, [value])
+
+  /**
+   * language change
+   */
+  useUpdateEffect(() => {
+    if (editorInstance.current) {
+      const model = editorInstance.current.getModel();
+      monaco.editor.setModelLanguage(model!, language!);
+    }
+  }, [language]);
 
   useUnmount(() => {
     editorInstance.current?.dispose();

@@ -14,11 +14,20 @@ const EditorContainer = () => {
     updateFile(code);
   };
 
+  let language: string
+  if (activeFile.filename.endsWith('.tsx') || activeFile.filename.endsWith('.ts')) {
+    language = 'typescript'
+  } else if (activeFile.filename.endsWith('.jsx') || activeFile.filename.endsWith('.js')) {
+    language = 'javascript'
+  } else {
+    language = activeFile.filename.split('.')[1]
+  }
+
   return (
     <>
       <FileSelector></FileSelector>
       <div className="editor-container">
-        <MonaceEditor key={activeFile.filename} onChange={onChange} value={activeFile?.code}></MonaceEditor>
+        <MonaceEditor key={activeFile.filename} onChange={onChange} value={activeFile?.code} language={language}></MonaceEditor>
 
         <div className="editor-floating">
           <ToggleButton text="AutoSave" value={autoSave} onChange={(value) => {

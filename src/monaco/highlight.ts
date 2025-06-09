@@ -1,4 +1,4 @@
-import * as monaco from 'monaco-editor-core'
+import * as monaco from 'monaco-editor'
 import { createHighlighterCoreSync, createJavaScriptRegexEngine } from 'shiki'
 import { shikiToMonaco } from '@shikijs/monaco'
 
@@ -13,8 +13,8 @@ export function registerHighlighter() {
         langs: [langTsx, langJsx],
         engine: createJavaScriptRegexEngine(),
     })
-    monaco.languages.register({ id: 'jsx', extensions: ['.jsx'] })
-    monaco.languages.register({ id: 'tsx', extensions: ['.tsx'] })
+    monaco.languages.register({ id: 'javascript', extensions: ['.jsx', '.js'] })
+    monaco.languages.register({ id: 'typescript', extensions: ['.tsx', '.ts'] })
     shikiToMonaco(highlighter, monaco)
 
     return {
