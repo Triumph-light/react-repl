@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./index.less";
 import Header from "../header/index.tsx";
 import Repl from "../repl/Repl.tsx";
@@ -36,15 +36,15 @@ const Playground = () => {
   /**
    * mobile 模式下，改成竖向布局
    */
-  let layout
+  const layout = useRef<"vertical" | "horizontal">()
   useMount(() => {
-    if (isMobile()) layout = "vertical"
+    if (isMobile()) layout.current = "vertical"
   })
 
   return (
     <div className="playground-container">
       <Header theme={theme} onChangeTheme={(value) => setTheme(value)}></Header>
-      <Repl store={store} theme={theme} layout={layout}></Repl>
+      <Repl store={store} theme={theme} layout={layout.current}></Repl>
     </div>
   );
 };
