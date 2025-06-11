@@ -5,14 +5,17 @@ import FileSelector from "../file-selector/index.tsx";
 import ToggleButton from "../../component/ToggleButton/index.tsx";
 import AutoSaveContext from "../../component/repl/autoSaveContext.ts";
 import "./index.less";
+import { useDebounceFn } from "ahooks";
 
 const EditorContainer = () => {
   const { updateFile, activeFile } = useContext(StoreContext);
   const { autoSave, setAutoSave } = useContext(AutoSaveContext)
 
-  const onChange = (code: string) => {
+  const { run: onChange } = useDebounceFn((code: string) => {
     updateFile(code);
-  };
+  }, {
+    wait: 100
+  })
 
   let language: string
   if (activeFile.filename.endsWith('.tsx') || activeFile.filename.endsWith('.ts')) {

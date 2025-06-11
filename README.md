@@ -29,3 +29,7 @@ export interface ReplProps {
   layout?: "horizontal" | "vertical";
 }
 ```
+
+# Credit
+
+inspired by @vue/repl

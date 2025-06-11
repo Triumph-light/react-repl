@@ -1,10 +1,10 @@
-import { useContext, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import iframeRaw from "./iframe.html?raw";
-import { onMount, onUnMount } from "../../hooks/index";
 import "./index.less";
 import StoreContext, { importMapFile } from "../../component/repl/storeContext";
 import { PreviewProxy } from "../PreviewProxy";
 import { compileModulesForPreview } from "../moduleCompiler";
+import Message from "../../component/Message";
 
 const Preview = () => {
   const store = useContext(StoreContext);
@@ -14,51 +14,78 @@ const Preview = () => {
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const sandbox = useRef<HTMLIFrameElement | null>(null);
+
+  const [runtimeError, setRuntimeError] = useState<string>("");
+
   const createSandbox = () => {
+    if (!containerRef.current) return;
     sandbox.current = document.createElement("iframe");
     const sandboxSrc = iframeRaw.replace(/<!--IMPORT_MAP-->/, JSON.stringify(importMap))
 
     sandbox.current.srcdoc = sandboxSrc;
-    containerRef.current?.appendChild(sandbox.current);
-    proxy.current = new PreviewProxy(sandbox.current);
-    sandbox.current.addEventListener("load", () => {
-      updatePreview();
+    containerRef.current.appendChild(sandbox.current);
+    proxy.current = new PreviewProxy(sandbox.current, {
+      on_success: (event: any) => {
+        setRuntimeError("")
+      },
+      on_error: (event: any) => {
+        const msg =
+          event.value instanceof Error ? event.value.message : event.value
+        if (
+          msg.includes('Failed to resolve module specifier') ||
+          msg.includes('Error resolving module specifier')
+        ) {
+          setRuntimeError(
+            msg.replace(/\. Relative references must.*$/, '') +
+            `.\nTip: edit the "Import Map" tab to specify import paths for dependencies.`)
+        } else {
+          setRuntimeError(event.value)
+        }
+      }
     });
+
+    sandbox.current.addEventListener("load", () => updatePreview())
   };
 
   function updatePreview() {
-    const modules = compileModulesForPreview(store);
-    const codeToEval = [`
+    console.clear()
+
+    try {
+      const modules = compileModulesForPreview(store);
+      const codeToEval = [`
         import * as React from 'react'
         window.__modules__ = {};
         window.React = React;
       `, ...modules];
 
-    /**
-     * todo： <App/>和App（）的区别，如何导致的这种差异?
-     */
-    codeToEval.push(
-      `
+      codeToEval.push(
+        `
         import React from 'react'
         import { createRoot } from "react-dom/client";
         const App = __modules__["${store.mainFile}"].default;
 
         createRoot(document.getElementById("root")).render(React.createElement(App));
       `
-    );
+      );
 
-    proxy.current!.eval(codeToEval);
+      proxy.current!.eval(codeToEval);
+    } catch (e) {
+      console.error(e, 'error')
+      setRuntimeError((e as Error).message)
+    }
   }
 
-  onMount(() => {
+  useEffect(() => {
     createSandbox();
+    return () => {
+      containerRef.current?.removeChild(sandbox.current!);
+    }
   });
 
-  onUnMount(() => {
-    containerRef.current?.removeChild(sandbox.current!);
-  });
-
-  return <div className="iframe-container" ref={containerRef} />;
+  return <>
+    <div className="iframe-container" ref={containerRef} />
+    <Message err={runtimeError}></Message>
+  </>;
 };
 
 export default Preview;
