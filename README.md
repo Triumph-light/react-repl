@@ -4,7 +4,13 @@ React component for editing React components, it is similar to vue repl。
 
 You can experience React Playground online on react-repl-vercel.app(https://react-repl.vercel.app/)
 
-# Props
+# Basic Usage
+
+```shell
+npm install react-repl-plus
+```
+
+## Props
 
 ```ts
 export interface ReplProps {
@@ -50,7 +56,7 @@ useStore({
 )
 ```
 
-# Basic Usage
+## Demo
 
 ```ts
 import { Repl, useStore } from "react-repl-plus";
