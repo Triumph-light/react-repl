@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import iframeRaw from "./iframe.html?raw";
 import "./index.less";
-import StoreContext, { importMapFile } from "../../component/repl/storeContext";
+import StoreContext from "../../component/repl/storeContext";
 import { PreviewProxy } from "../PreviewProxy";
 import { compileModulesForPreview } from "../moduleCompiler";
 import Message from "../../component/Message";
@@ -18,7 +18,7 @@ const Preview = () => {
   const [runtimeError, setRuntimeError] = useState<string>("");
 
   const createSandbox = () => {
-    if (!containerRef.current) return;
+    if (!containerRef.current) return
     sandbox.current = document.createElement("iframe");
     const sandboxSrc = iframeRaw.replace(/<!--IMPORT_MAP-->/, JSON.stringify(importMap))
 
@@ -26,7 +26,7 @@ const Preview = () => {
     containerRef.current.appendChild(sandbox.current);
     proxy.current = new PreviewProxy(sandbox.current, {
       on_success: (event: any) => {
-        setRuntimeError("")
+
       },
       on_error: (event: any) => {
         const msg =
@@ -49,6 +49,7 @@ const Preview = () => {
 
   function updatePreview() {
     console.clear()
+    setRuntimeError("")
 
     try {
       const modules = compileModulesForPreview(store);
@@ -79,8 +80,9 @@ const Preview = () => {
     createSandbox();
     return () => {
       containerRef.current?.removeChild(sandbox.current!);
+      proxy.current?.destroy()
     }
-  });
+  }, [store.version]);
 
   return <>
     <div className="iframe-container" ref={containerRef} />

@@ -29,4 +29,8 @@ export class PreviewProxy {
                 return this.handlers.on_success(event.data)
         }
     }
+
+    destroy() {
+        window.removeEventListener('message', this.handle_event)
+    }
 }

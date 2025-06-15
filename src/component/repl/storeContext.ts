@@ -39,6 +39,9 @@ export class ReplStore {
     activeFilename: StoreParams['activeFilename'];
     template: StoreParams['template']
 
+    version: number = 0
+    private update: () => void
+
     constructor(
         {
             files = undefined,
@@ -50,7 +53,7 @@ export class ReplStore {
             activeFilename = undefined,
             builtinImportMap = undefined!,
         }: Partial<StoreParams> = {},
-        public update: Subscribe
+        update: Subscribe
     ) {
         this.files = files || {
             [mainFile]: new File(mainFile, template.welcomeCode),
@@ -62,6 +65,11 @@ export class ReplStore {
         this.mainFile = mainFile
         this.activeFilename = activeFilename || mainFile;
         this.template = template;
+
+        this.update = () => {
+            this.version++
+            update()
+        }
     }
 
     get activeFile() {
