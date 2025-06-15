@@ -4,6 +4,10 @@ React component for editing React components, it is similar to vue repl。
 
 You can experience React Playground online on react-repl-vercel.app(https://react-repl.vercel.app/)
 
+# Note
+
+now just support .jsx and .js extensions.
+
 # Basic Usage
 
 ```shell

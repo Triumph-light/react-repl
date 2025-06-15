@@ -1,6 +1,9 @@
 import React, { Fragment, useContext, useRef, useState } from "react";
 import StoreContext, { importMapFile } from "../../component/repl/storeContext";
 import "./index.less";
+
+const SUPPORTFILE = ['jsx', 'js']
+
 const FileSelector = () => {
   const [pending, setPending] = useState<boolean | string>(false);
   const [pendingFileName, setPendingFileName] = useState<string>("Comp.tsx");
@@ -53,6 +56,12 @@ const FileSelector = () => {
     // 前置校验名称合法性、重复性
     if (filename !== oldFilename && filename in files) {
       return;
+    }
+
+    const extension = filename.split('.')[1]
+    if (!SUPPORTFILE.includes(extension)) {
+      alert('[@react/repl] now just support .jsx/.js extension')
+      return
     }
 
     cancelNameFile();
