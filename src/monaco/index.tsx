@@ -17,7 +17,9 @@ const MonacoEditor = (props: Props) => {
   const propTheme = useContext(ThemeContext)
 
   const emitChangeEvent = () => {
-    onChange(editorInstance.current?.getValue() || "");
+    if (!__prevent_trigger_change_event.current) {
+      onChange(editorInstance.current?.getValue() || "");
+    }
   }
   initMonaco()
   const containerRef = useRef<HTMLDivElement>(null)
@@ -75,9 +77,30 @@ const MonacoEditor = (props: Props) => {
   /**
    * value change
    */
+  const __prevent_trigger_change_event = useRef<boolean | null>(null);
   useUpdateEffect(() => {
-    if (editorInstance.current && value !== editorInstance.current.getValue())
-      editorInstance.current.setValue(value)
+    if (editorInstance.current) {
+      if (value === editorInstance.current.getValue()) {
+        return;
+      }
+
+      const model = editorInstance.current.getModel();
+      __prevent_trigger_change_event.current = true;
+      editorInstance.current.pushUndoStop();
+      // pushEditOperations says it expects a cursorComputer, but doesn't seem to need one.
+      model!.pushEditOperations(
+        [],
+        [
+          {
+            range: model!.getFullModelRange(),
+            text: value,
+          },
+        ],
+        undefined,
+      );
+      editorInstance.current.pushUndoStop();
+      __prevent_trigger_change_event.current = false;
+    }
   }, [value])
 
   /**
