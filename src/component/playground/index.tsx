@@ -28,7 +28,7 @@ const Playground = () => {
   /**
    * mobile 模式下，改成竖向布局
    */
-  const layout = useRef<"vertical" | "horizontal">()
+  const layout = useRef<"vertical" | "horizontal">(undefined)
 
   return (
     <div className="playground-container">

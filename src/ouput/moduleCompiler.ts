@@ -1,4 +1,4 @@
-import { File, ReturnStore } from "../component/repl/storeContext";
+import { File, ReplStore } from "../component/repl/storeContext";
 import { transform } from "@babel/standalone";
 import { type NodePath } from "@babel/traverse";
 import type { ExportDefaultDeclaration, Identifier, ImportDeclaration, ExportNamedDeclaration, ExportAllDeclaration } from "@babel/types";
@@ -8,7 +8,7 @@ const modulesKey = '__modules__'
 const moduleKey = '__module__'
 const exportKey = '__export__'
 
-export function compileModulesForPreview(store: ReturnStore) {
+export function compileModulesForPreview(store: ReplStore) {
     const processed: string[] = []
     const seen = new Set<File>()
     processFile(store, store.files[store.mainFile], processed, seen)
@@ -16,7 +16,7 @@ export function compileModulesForPreview(store: ReturnStore) {
     return processed
 }
 
-function processFile(store: ReturnStore, file: File, processed: string[], seen: Set<File>) {
+function processFile(store: ReplStore, file: File, processed: string[], seen: Set<File>) {
     if (seen.has(file)) {
         return
     }
@@ -28,7 +28,7 @@ function processFile(store: ReturnStore, file: File, processed: string[], seen: 
     processed.push(js)
 }
 
-function processChildFiles(store: ReturnStore, importedFiles: Set<string>, processed: string[], seen: Set<File>) {
+function processChildFiles(store: ReplStore, importedFiles: Set<string>, processed: string[], seen: Set<File>) {
     for (const filename of importedFiles) {
         processFile(store, store.files[filename], processed, seen)
     }
@@ -37,7 +37,7 @@ function processChildFiles(store: ReturnStore, importedFiles: Set<string>, proce
 /**
  * todo: 模块解析这里是否能优化，解析了两次
  */
-function processModule(store: ReturnStore, filename: string) {
+function processModule(store: ReplStore, filename: string) {
     function defineExport(name: string, local = name) {
         s.append(`\n${exportKey}(${moduleKey}, "${name}", () => ${local})`)
     }
@@ -64,6 +64,7 @@ function processModule(store: ReturnStore, filename: string) {
                     ExportDefaultDeclaration(path: NodePath<ExportDefaultDeclaration>) {
                         const { node } = path
                         s.append(`${moduleKey}.default = ${(node.declaration as Identifier).name}\n`)
+                        s.remove(node.start!, node.end!)
                     },
                     ExportNamedDeclaration(path: NodePath<ExportNamedDeclaration>) {
                         const { node } = path
@@ -75,11 +76,13 @@ function processModule(store: ReturnStore, filename: string) {
                                     const varName = decl.id.name
                                     s.append(`\n ${moduleKey}.${varName} = ${varName}`)
                                 }
+                                s.remove(node.start!, node.end!)
                             }
                             // export function get(){}, export class Person{}
                             else if (node.declaration.type === 'ClassDeclaration' || node.declaration.type === 'FunctionDeclaration') {
                                 const varName = node.declaration.id?.name
                                 s.append(`\n ${moduleKey}.${varName} = ${varName}`)
+                                s.remove(node.start!, node.end!)
                             }
                         }
                         // export { foo, bar } from './foo'
@@ -91,6 +94,7 @@ function processModule(store: ReturnStore, filename: string) {
                                 const varName = specifier.local.name
                                 s.appendRight(node.end!, `\n ${moduleKey}.${varName} = ${varName}`)
                             }
+                            s.remove(node.start!, node.end!)
                         }
                         // export { name, age }
                         else {
@@ -98,6 +102,7 @@ function processModule(store: ReturnStore, filename: string) {
                                 const varName = specifier.local.name
                                 s.append(`\n ${moduleKey}.${varName} = ${varName}`)
                             }
+                            s.remove(node.start!, node.end!)
                         }
                     },
                     ImportDeclaration(path: NodePath<ImportDeclaration>) {
