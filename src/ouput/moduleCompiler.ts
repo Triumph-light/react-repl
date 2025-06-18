@@ -76,14 +76,13 @@ function processModule(store: ReplStore, filename: string) {
                                     const varName = decl.id.name
                                     s.append(`\n ${moduleKey}.${varName} = ${varName}`)
                                 }
-                                s.remove(node.start!, node.end!)
                             }
                             // export function get(){}, export class Person{}
                             else if (node.declaration.type === 'ClassDeclaration' || node.declaration.type === 'FunctionDeclaration') {
                                 const varName = node.declaration.id?.name
                                 s.append(`\n ${moduleKey}.${varName} = ${varName}`)
-                                s.remove(node.start!, node.end!)
                             }
+                            s.remove(node.start!, node.declaration.start!)
                         }
                         // export { foo, bar } from './foo'
                         else if (node.source) {
