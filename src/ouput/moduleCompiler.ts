@@ -111,19 +111,20 @@ function processModule(store: ReplStore, filename: string) {
                         if (node.source.value.startsWith('./')) {
                             const modulePath = node.source.value.replace(/^\.\//, '')
                             importedFiles.add(modulePath)
-                            // import foo from 'xx'
                             if (importDefault) {
+                                // import foo from 'xx'
                                 const moduleName = importDefault.local.name
                                 s.overwrite(node.start!, node.end!, `const ${moduleName} = ${modulesKey}["${modulePath}"].default\n`)
-                            }
-
-                            const nameSpaceObj = node.specifiers.find(specifier => specifier.type === 'ImportNamespaceSpecifier')
-                            if (nameSpaceObj) {
-                                s.overwrite(node.start!, node.end!, `const ${nameSpaceObj.local.name} = ${modulesKey}["${modulePath}"]`)
-                            } else {
-                                // import { foo } from 'xx'
-                                const expandNames = node.specifiers?.map(specifier => specifier.local.name)
-                                if (expandNames && expandNames.length !== 0) s.overwrite(node.start!, node.end!, `const { ${expandNames.join(',')} } =  ${modulesKey}["${modulePath}"]`)
+                            }else {
+                                const nameSpaceObj = node.specifiers.find(specifier => specifier.type === 'ImportNamespaceSpecifier')
+                                if (nameSpaceObj) {
+                                    // import * as xx from 'xx'
+                                    s.overwrite(node.start!, node.end!, `const ${nameSpaceObj.local.name} = ${modulesKey}["${modulePath}"]`)
+                                } else {
+                                    // import { foo } from 'xx'
+                                    const expandNames = node.specifiers?.map(specifier => specifier.local.name)
+                                    if (expandNames && expandNames.length !== 0) s.overwrite(node.start!, node.end!, `const { ${expandNames.join(',')} } =  ${modulesKey}["${modulePath}"]`)
+                                }
                             }
 
                         }
