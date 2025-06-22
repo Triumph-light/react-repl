@@ -8,7 +8,20 @@ You can experience React Playground online on react-repl-vercel.app(https://reac
 
 now just support .jsx and .js extensions.
 
-# Basic Usage
+**requires explicitly passing in the editor to be used for tree-shaking.**
+
+```ts
+// vite.config.ts
+import { defineConfig } from "vite";
+export default defineConfig({
+  optimizeDeps: {
+    exclude: ["react-repl-plus"],
+  },
+  // ...
+});
+```
+
+# Advance Usage
 
 ```shell
 npm install react-repl-plus
@@ -60,10 +73,22 @@ useStore({
 )
 ```
 
-## Demo
+## Basic Usage
+
+```ts
+import { Repl } from "react-repl-plus";
+import "react-repl-plus/style.css";
+
+export default function App() {
+  return <Repl></Repl>;
+}
+```
+
+## Demo2
 
 ```ts
 import { Repl, useStore } from "react-repl-plus";
+import "react-repl-plus/style.css";
 const Playground = () => {
   const [theme, setTheme] = useState<Theme>("light");
 

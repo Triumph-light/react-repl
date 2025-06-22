@@ -27,6 +27,7 @@
   "module": "./dist/react-repl.js",
   "exports": {
     ".": {
+      "types": "./dist/react-repl.d.ts",
       "import": "./dist/react-repl.js"
     },
     "./package.json": "./package.json",
