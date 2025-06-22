@@ -42,7 +42,7 @@
     "preview": "vite build -c vite.preview.config.ts",
     "release": "npm run build && bumpp && npm publish"
   },
-  "dependencies": {
+  "devDependencies": {
     "@babel/standalone": "^7.27.0",
     "@monaco-editor/react": "^4.7.0-rc.0",
     "@vercel/analytics": "^1.5.0",
@@ -52,9 +52,7 @@
     "monaco-editor": "^0.52.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "vite-plugin-dts": "^4.5.4"
-  },
-  "devDependencies": {
+    "vite-plugin-dts": "^4.5.4",
     "@eslint/js": "^9.21.0",
     "@shikijs/monaco": "^3.2.1",
     "@types/babel__standalone": "^7.1.9",

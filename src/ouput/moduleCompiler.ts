@@ -1,7 +1,7 @@
 import { File, ReplStore } from "../component/repl/storeContext";
 import { transform } from "@babel/standalone";
 import { type NodePath } from "@babel/traverse";
-import type { ExportDefaultDeclaration, Identifier, ImportDeclaration, ExportNamedDeclaration, ExportAllDeclaration } from "@babel/types";
+import type { ExportDefaultDeclaration, Identifier, ImportDeclaration, ExportNamedDeclaration, ExportAllDeclaration, ExportSpecifier } from "@babel/types";
 import MagicString from "magic-string";
 
 const modulesKey = '__modules__'
@@ -38,9 +38,9 @@ function processChildFiles(store: ReplStore, importedFiles: Set<string>, process
  * todo: 模块解析这里是否能优化，解析了两次
  */
 function processModule(store: ReplStore, filename: string) {
-    function defineExport(name: string, local = name) {
-        s.append(`\n${exportKey}(${moduleKey}, "${name}", () => ${local})`)
-    }
+    // function defineExport(name: string, local = name) {
+    //     s.append(`\n${exportKey}(${moduleKey}, "${name}", () => ${local})`)
+    // }
     const rawCode = store.files[filename].code
     const s = new MagicString(rawCode)
 
@@ -73,7 +73,7 @@ function processModule(store: ReplStore, filename: string) {
                             // export const age = 18, name = 'xxx'
                             if (node.declaration.type === 'VariableDeclaration') {
                                 for (const decl of node.declaration.declarations) {
-                                    const varName = decl.id.name
+                                    const varName = (decl.id as Identifier).name
                                     s.append(`\n ${moduleKey}.${varName} = ${varName}`)
                                 }
                             }
@@ -87,10 +87,10 @@ function processModule(store: ReplStore, filename: string) {
                         // export { foo, bar } from './foo'
                         else if (node.source) {
                             const modulePath = node.source.value.replace(/\.\//, '')
-                            const expandNames = node.specifiers?.map(specifier => specifier.local.name)
+                            const expandNames = node.specifiers.map((specifier) => (specifier as ExportSpecifier).local.name)
                             if (expandNames && expandNames.length !== 0) s.overwrite(node.start!, node.end!, `const { ${expandNames.join(',')} } =  ${modulesKey}["${modulePath}"]`)
                             for (const specifier of node.specifiers) {
-                                const varName = specifier.local.name
+                                const varName = (specifier as ExportSpecifier).local.name
                                 s.appendRight(node.end!, `\n ${moduleKey}.${varName} = ${varName}`)
                             }
                             s.remove(node.start!, node.end!)
@@ -98,7 +98,7 @@ function processModule(store: ReplStore, filename: string) {
                         // export { name, age }
                         else {
                             for (const specifier of node.specifiers) {
-                                const varName = specifier.local.name
+                                const varName = (specifier as ExportSpecifier).local.name
                                 s.append(`\n ${moduleKey}.${varName} = ${varName}`)
                             }
                             s.remove(node.start!, node.end!)

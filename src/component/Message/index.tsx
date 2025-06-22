@@ -16,7 +16,8 @@ const Message = (props: MessageProps) => {
       return err
     } else {
       let msg = err.message
-      const loc = err.loc
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const loc = (err as any).loc
       if (loc && loc.start) {
         msg = `(${loc.start.line}:${loc.start.column}) ` + msg
       }

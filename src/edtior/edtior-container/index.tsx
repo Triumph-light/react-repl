@@ -9,7 +9,7 @@ import { useDebounceFn } from "ahooks";
 
 const EditorContainer = () => {
   const { updateFile, activeFile } = useContext(StoreContext);
-  const { autoSave, setAutoSave } = useContext(AutoSaveContext)
+  const { autoSave, setAutoSave } = useContext(AutoSaveContext)!
 
   const { run: onChange } = useDebounceFn((code: string) => {
     updateFile(code);

@@ -14,7 +14,7 @@ interface Props {
 
 const MonacoEditor = (props: Props) => {
   const { onChange, value, language } = props;
-  const propTheme = useContext(ThemeContext)
+  const propTheme = useContext(ThemeContext)!
 
   const emitChangeEvent = () => {
     if (!__prevent_trigger_change_event.current) {
@@ -56,7 +56,7 @@ const MonacoEditor = (props: Props) => {
   /** 
   * autosave
   */
-  const { autoSave } = useContext(AutoSaveContext);
+  const { autoSave } = useContext(AutoSaveContext)!;
   useEffect(() => {
     let dispose: monaco.IDisposable | undefined;
     if (autoSave) {

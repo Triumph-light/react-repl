@@ -1,7 +1,7 @@
 import { createContext } from "react";
 import welcomeCode from "../../template/welcome.jsx?raw";
 import templateCode from "../../template/template.jsx?raw";
-import { ImportMap, mergeImportMap, useReactImportMap } from "../../import-map";
+import { ImportMap, useReactImportMap } from "../../import-map";
 import { useCreation, useMount, useUpdate } from "ahooks";
 import { atou, utoa } from "../../utils";
 

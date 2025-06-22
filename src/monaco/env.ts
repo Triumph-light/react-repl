@@ -31,7 +31,7 @@ export function loadMonacoEnv() {
   };
 
   monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-    target: monaco.languages.typescript.ScriptTarget.ES2022,
+    target: monaco.languages.typescript.ScriptTarget.ES2020,
     allowNonTsExtensions: true,
     allowJs: true,
     jsx: monaco.languages.typescript.JsxEmit.React,
