@@ -1,6 +1,6 @@
 {
   "name": "react-repl-plus",
-  "version": "0.0.1-beta.11",
+  "version": "0.0.1-beta.12",
   "type": "module",
   "author": {
     "name": "Triumph-light",
@@ -21,8 +21,14 @@
   },
   "license": "MIT",
   "description": "React component for editing React components, it is similar to vue repl",
+  "files": [
+    "dist"
+  ],
   "module": "./dist/react-repl.js",
   "exports": {
+    ".": {
+      "import": "./dist/react-repl.js"
+    },
     "./package.json": "./package.json"
   },
   "publishConfig": {
