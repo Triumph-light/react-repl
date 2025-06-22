@@ -1,6 +1,6 @@
 {
   "name": "react-repl-plus",
-  "version": "0.0.1-beta.15",
+  "version": "0.0.1-beta.16",
   "type": "module",
   "author": {
     "name": "Triumph-light",
@@ -29,7 +29,9 @@
     ".": {
       "import": "./dist/react-repl.js"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./style.css": "./dist/index.css",
+    "./dist/style.css": "./dist/index.css"
   },
   "publishConfig": {
     "access": "public",
