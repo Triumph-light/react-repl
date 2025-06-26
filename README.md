@@ -1,4 +1,4 @@
-# React Repl
+# React Repl[![npm version](https://img.shields.io/npm/v/react-repl-plus.svg)](https://www.npmjs.com/package/react-repl-plus)[![npm downloads](https://img.shields.io/npm/dm/react-repl-plus.svg)](https://www.npmjs.com/package/react-repl-plus)[![npm license](https://img.shields.io/npm/l/react-repl-plus.svg)](https://www.npmjs.com/package/react-repl-plus)
 
 React component for editing React components, it is similar to vue repl。
 
