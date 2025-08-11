@@ -6,7 +6,7 @@ You can experience React Playground online on react-repl-vercel.app(https://reac
 
 # Note
 
-now just support .jsx and .js extensions.
+now just support .(t|j)sx and .(t|j)s extensions.
 
 **requires explicitly passing in the editor to be used for tree-shaking.**
 
