@@ -1,6 +1,6 @@
 {
   "name": "react-repl-plus",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React component for editing React components, it is similar to vue repl",
   "type": "module",
   "keywords": [
