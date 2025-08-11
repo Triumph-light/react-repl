@@ -31,6 +31,13 @@ export function loadMonacoEnv() {
   };
 
   monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+    jsx: monaco.languages.typescript.JsxEmit.React,
+    allowJs: true,
+    checkJs: true,
+    allowNonTsExtensions: true,
+  });
+
+  monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
     target: monaco.languages.typescript.ScriptTarget.ES2020,
     allowNonTsExtensions: true,
     allowJs: true,
@@ -38,13 +45,6 @@ export function loadMonacoEnv() {
     moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
     module: monaco.languages.typescript.ModuleKind.ESNext,
     esModuleInterop: true,
-    typeRoots: ['node_modules/@types'],
-  })
-
-  monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-    ...monaco.languages.typescript.javascriptDefaults.getCompilerOptions(),
-    allowSyntheticDefaultImports: true,
-    strict: true,
   })
 
   // 添加默认 lib（重要，否则编辑器不知道 DOM 类型等）

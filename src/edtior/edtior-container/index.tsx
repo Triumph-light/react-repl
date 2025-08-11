@@ -18,19 +18,25 @@ const EditorContainer = () => {
   })
 
   let language: string
-  if (activeFile.filename.endsWith('.tsx') || activeFile.filename.endsWith('.ts')) {
-    language = 'typescript'
-  } else if (activeFile.filename.endsWith('.jsx') || activeFile.filename.endsWith('.js')) {
-    language = 'javascript'
-  } else {
-    language = activeFile.filename.split('.')[1]
+  const extension = activeFile.filename.split('.')[1]
+  switch (extension) {
+    case 'tsx':
+    case 'ts':
+      language = 'typescript'
+      break;
+    case 'jsx':
+    case 'js':
+      language = 'javascript'
+      break;
+    default:
+      language = extension
   }
 
   return (
     <>
       <FileSelector></FileSelector>
       <div className="editor-container">
-        <MonaceEditor key={activeFile.filename} onChange={onChange} value={activeFile?.code} language={language}></MonaceEditor>
+        <MonaceEditor onChange={onChange} value={activeFile?.code} language={language}></MonaceEditor>
 
         <div className="editor-floating">
           <ToggleButton text="AutoSave" value={autoSave} onChange={(value) => {

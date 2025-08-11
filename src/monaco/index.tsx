@@ -5,33 +5,36 @@ import AutoSaveContext from "../component/repl/autoSaveContext";
 import { useMount, useUnmount, useUpdateEffect } from "ahooks";
 import ThemeContext from "../component/repl/themeContext";
 import { initMonaco } from "./env";
+import * as monacoEditor from "monaco-editor/esm/vs/editor/editor.api";
+import StoreContext from "../component/repl/storeContext";
 
 interface Props {
   onChange: (code: string) => void;
   value: string;
-  language?: string;
+  language: string;
+  uri?: (monaco: typeof monacoEditor) => monacoEditor.Uri;
 }
 
 const MonacoEditor = (props: Props) => {
   const { onChange, value, language } = props;
   const propTheme = useContext(ThemeContext)!
+  const { activeFilename } = useContext(StoreContext)
 
   const emitChangeEvent = () => {
     if (!__prevent_trigger_change_event.current) {
       onChange(editorInstance.current?.getValue() || "");
     }
   }
-  initMonaco()
+
   const containerRef = useRef<HTMLDivElement>(null)
   const editorInstance = useRef<monaco.editor.IStandaloneCodeEditor>(null);
-
   const theme = useRef<Record<string, string>>(null)
   const initMonacoEditor = () => {
     theme.current = registerHighlighter();
     if (containerRef.current) {
+      let model = monaco.editor.createModel(value, language, monaco.Uri.parse(`file:///${activeFilename}`));
       editorInstance.current = monaco.editor.create(containerRef.current, {
-        value: value,
-        language,
+        model,
         fontSize: 13,
         tabSize: 2,
         automaticLayout: true,
@@ -40,16 +43,18 @@ const MonacoEditor = (props: Props) => {
           enabled: false,
         },
         inlineSuggest: {
-          enabled: false,
+          enabled: true,
         },
         fixedOverflowWidgets: true,
         readOnly: false,
         theme: theme.current[propTheme],
       })
+      console.log(editorInstance.current.getModel()?.getLanguageId());
     }
   }
 
   useMount(() => {
+    initMonaco()
     initMonacoEditor()
   })
 

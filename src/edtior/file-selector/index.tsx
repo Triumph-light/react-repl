@@ -2,11 +2,11 @@ import React, { Fragment, useContext, useRef, useState } from "react";
 import StoreContext, { importMapFile } from "../../component/repl/storeContext";
 import "./index.less";
 
-const SUPPORTFILE = ['jsx', 'js']
+const SUPPORTFILE = ['jsx', 'js', 'ts', 'tsx']
 
 const FileSelector = () => {
   const [pending, setPending] = useState<boolean | string>(false);
-  const [pendingFileName, setPendingFileName] = useState<string>("Comp.tsx");
+  const [pendingFileName, setPendingFileName] = useState<string>("Comp.jsx");
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -15,7 +15,6 @@ const FileSelector = () => {
     store!;
 
   const filenames = Object.entries(files).filter(([name]) => name !== importMapFile).map(([name]) => name);
-
   const startAddFile = () => {
     let i = 0;
     let name = "Comp.jsx";

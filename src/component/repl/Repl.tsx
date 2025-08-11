@@ -38,13 +38,24 @@ const Repl = (props: ReplProps) => {
   /**
    * 未传入store，自动兜底
    */
+  if(store) return <div className="react-repl">
+      <ThemeContext.Provider value={theme}>
+        <AutoSaveContext.Provider value={{ autoSave, setAutoSave }}>
+          <StoreContext.Provider value={store}>
+            <SplitPane layout={layout}>
+              <EditorContainer></EditorContainer>
+              <Preview></Preview>
+            </SplitPane>
+          </StoreContext.Provider>
+        </AutoSaveContext.Provider></ThemeContext.Provider>
+    </div>
   const innerStore = useStore()
 
   return (
     <div className="react-repl">
       <ThemeContext.Provider value={theme}>
         <AutoSaveContext.Provider value={{ autoSave, setAutoSave }}>
-          <StoreContext.Provider value={store || innerStore}>
+          <StoreContext.Provider value={innerStore}>
             <SplitPane layout={layout}>
               <EditorContainer></EditorContainer>
               <Preview></Preview>

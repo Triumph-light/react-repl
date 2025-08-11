@@ -25,6 +25,7 @@ type StoreParams = {
     mainFile: string;
     activeFilename: string;
     builtinImportMap: ImportMap;
+    useTs: boolean;
 };
 
 export type Subscribe = () => void;
@@ -38,7 +39,7 @@ export class ReplStore {
     mainFile: StoreParams['mainFile'];
     activeFilename: StoreParams['activeFilename'];
     template: StoreParams['template']
-
+    useTs: StoreParams['useTs'];
     version: number = 0
     private update: () => void
 
@@ -52,9 +53,13 @@ export class ReplStore {
             mainFile = "App.jsx",
             activeFilename = undefined,
             builtinImportMap = undefined!,
+            useTs = true,
         }: Partial<StoreParams> = {},
         update: Subscribe
     ) {
+        this.useTs = useTs;
+
+        mainFile = useTs ? "App.tsx" : "App.jsx";
         this.files = files || {
             [mainFile]: new File(mainFile, template.welcomeCode),
         };
@@ -102,6 +107,7 @@ export class ReplStore {
 
     renameFile: (oldFilename: string, newFilename: string) => void = (oldFilename, newFilename) => {
         const file = this.files[oldFilename];
+        file.filename = newFilename
 
         if (!file) {
             return;
@@ -124,7 +130,6 @@ export class ReplStore {
         if (this.activeFilename === oldFilename) {
             this.activeFilename = newFilename
         }
-
         this.update()
     };
 

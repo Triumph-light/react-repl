@@ -47,7 +47,7 @@ function processModule(store: ReplStore, filename: string) {
     const importedFiles = new Set<string>()
 
     let code = transform(rawCode, {
-        presets: ['react'],
+        presets: [["typescript", { isTSX: true, allExtensions: true }],'react'],
         plugins: [() => {
             return {
                 visitor: {
@@ -132,11 +132,11 @@ function processModule(store: ReplStore, filename: string) {
                     }
                 }
             }
-        }]
+        }],
     }).code!
 
     code = transform(s.toString(), {
-        presets: ['react'],
+        presets: [["typescript", { isTSX: true, allExtensions: true }],'react'],
     }).code!
 
     code = `const ${moduleKey} = ${modulesKey}[${JSON.stringify(
