@@ -1,33 +1,33 @@
-import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
-import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
-import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
-import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
-import * as monaco from 'monaco-editor';
-let initted = false
+import * as monaco from "monaco-editor";
+import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
+import cssWorker from "monaco-editor/esm/vs/language/css/css.worker?worker";
+import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
+import tsWorker from "monaco-editor/esm/vs/language/typescript/ts.worker?worker";
+let initted = false;
 
 export function initMonaco() {
-  if (initted) return
-  loadMonacoEnv()
-  initted = true
+  if (initted) return;
+  loadMonacoEnv();
+  initted = true;
 }
 
 export function loadMonacoEnv() {
   self.MonacoEnvironment = {
     getWorker(_: any, label: string) {
       switch (label) {
-        case 'json':
-          return new jsonWorker()
-        case 'css':
-        case 'scss':
-        case 'less':
-          return new cssWorker()
-        case 'typescript':
-        case 'javascript':
-          return new tsWorker()
+        case "json":
+          return new jsonWorker();
+        case "css":
+        case "scss":
+        case "less":
+          return new cssWorker();
+        case "typescript":
+        case "javascript":
+          return new tsWorker();
         default:
-          return new editorWorker()
+          return new editorWorker();
       }
-    }
+    },
   };
 
   monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
@@ -45,9 +45,9 @@ export function loadMonacoEnv() {
     moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
     module: monaco.languages.typescript.ModuleKind.ESNext,
     esModuleInterop: true,
-  })
+  });
 
   // 添加默认 lib（重要，否则编辑器不知道 DOM 类型等）
-  monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true)
-  monaco.languages.typescript.javascriptDefaults.setEagerModelSync(true)
+  monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true);
+  monaco.languages.typescript.javascriptDefaults.setEagerModelSync(true);
 }

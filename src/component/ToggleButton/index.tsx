@@ -1,23 +1,23 @@
-import React from 'react';
-import './index.less';
-import { useControllableValue } from 'ahooks';
+import { useControllableValue } from "ahooks";
+import React from "react";
+import "./index.less";
 
 interface ToggleButtonProps {
   text?: string;
-  value?: boolean
-  onChange?: (value: boolean) => void
+  value?: boolean;
+  onChange?: (value: boolean) => void;
 }
 
 const ToggleButton = (props: ToggleButtonProps) => {
-  const { text } = props
+  const { text } = props;
   const [active, setActive] = useControllableValue<boolean>(props, {
-    defaultValue: false
-  })
+    defaultValue: false,
+  });
   return (
-    <div className='wrapper' onClick={() => setActive(pre => !pre)}>
+    <div className="wrapper" onClick={() => setActive((pre) => !pre)}>
       <span>{text}</span>
-      <div className={`toggle ${active && 'active'}`}>
-        <div className='indicator'></div>
+      <div className={`toggle ${active && "active"}`}>
+        <div className="indicator"></div>
       </div>
     </div>
   );

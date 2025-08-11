@@ -1,36 +1,38 @@
-import React, { useState } from 'react';
-import './index.less';
+import React, { useState } from "react";
+import "./index.less";
 
 interface MessageProps {
-  err?: string | Error | false
-  warn?: string | Error
+  err?: string | Error | false;
+  warn?: string | Error;
 }
 
 const Message = (props: MessageProps) => {
   const { err, warn } = props;
 
-  const [dismissed, setDismissed] = useState(false)
+  const [dismissed, setDismissed] = useState(false);
 
   function formatMessage(err: string | Error): string {
-    if (typeof err === 'string') {
-      return err
+    if (typeof err === "string") {
+      return err;
     } else {
-      let msg = err.message
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const loc = (err as any).loc
+      let msg = err.message;
+
+      const loc = (err as any).loc;
       if (loc && loc.start) {
-        msg = `(${loc.start.line}:${loc.start.column}) ` + msg
+        msg = `(${loc.start.line}:${loc.start.column}) ${msg}`;
       }
-      return msg
+      return msg;
     }
   }
 
-  if (dismissed || (!err && !warn)) return
+  if (dismissed || (!err && !warn)) return;
   return (
-    <div className={`msg ${err ? 'err' : 'warn'}`}>
+    <div className={`msg ${err ? "err" : "warn"}`}>
       <pre>{formatMessage(err || warn!)}</pre>
-      <button className="dismiss" onClick={() => setDismissed(true)}>✕</button>
-    </div >
+      <button className="dismiss" onClick={() => setDismissed(true)}>
+        ✕
+      </button>
+    </div>
   );
 };
 

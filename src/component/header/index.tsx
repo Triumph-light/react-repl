@@ -1,31 +1,31 @@
-import React from "react";
-import "./index.less";
-import Sun from '../../assets/sun'
 import { useControllableValue } from "ahooks";
-import Moon from "../../assets/moon";
+import React from "react";
 import Github from "../../assets/github";
+import Moon from "../../assets/moon";
 import ReactLogo from "../../assets/react";
 import Share from "../../assets/share";
+import Sun from "../../assets/sun";
+import "./index.less";
 
 interface HeaderProps {
-  theme?: 'light' | 'dark';
-  onChangeTheme?: (theme: 'light' | 'dark') => void;
+  theme?: "light" | "dark";
+  onChangeTheme?: (theme: "light" | "dark") => void;
 }
 
 const Header = (props: HeaderProps) => {
-  const [theme, setTheme] = useControllableValue<'light' | 'dark'>(props, {
-    defaultValue: 'light',
-    valuePropName: 'theme',
-    trigger: 'onChangeTheme'
+  const [theme, setTheme] = useControllableValue<"light" | "dark">(props, {
+    defaultValue: "light",
+    valuePropName: "theme",
+    trigger: "onChangeTheme",
   });
   const handleToggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
-  }
+    setTheme(theme === "light" ? "dark" : "light");
+  };
 
   const copyClick = async () => {
-    await navigator.clipboard.writeText(location.href)
-    alert('Sharable URL has been copied to clipboard.')
-  }
+    await navigator.clipboard.writeText(location.href);
+    alert("Sharable URL has been copied to clipboard.");
+  };
 
   return (
     <nav>
@@ -38,7 +38,7 @@ const Header = (props: HeaderProps) => {
           <Share />
         </button>
         <button className="toggle-dark" onClick={handleToggleTheme}>
-          {theme === 'light' ? <Sun></Sun> : <Moon></Moon>}
+          {theme === "light" ? <Sun></Sun> : <Moon></Moon>}
         </button>
         <a
           href="https://github.com/Triumph-light/react-repl"

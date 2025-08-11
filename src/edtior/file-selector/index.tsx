@@ -2,7 +2,7 @@ import React, { Fragment, useContext, useRef, useState } from "react";
 import StoreContext, { importMapFile } from "../../component/repl/storeContext";
 import "./index.less";
 
-const SUPPORTFILE = ['jsx', 'js', 'ts', 'tsx']
+const SUPPORTFILE = ["jsx", "js", "ts", "tsx"];
 
 const FileSelector = () => {
   const [pending, setPending] = useState<boolean | string>(false);
@@ -14,7 +14,9 @@ const FileSelector = () => {
   const { files, activeFilename, renameFile, addFile, deleteFile, setActive } =
     store!;
 
-  const filenames = Object.entries(files).filter(([name]) => name !== importMapFile).map(([name]) => name);
+  const filenames = Object.entries(files)
+    .filter(([name]) => name !== importMapFile)
+    .map(([name]) => name);
   const startAddFile = () => {
     let i = 0;
     let name = "Comp.jsx";
@@ -57,10 +59,10 @@ const FileSelector = () => {
       return;
     }
 
-    const extension = filename.split('.')[1]
+    const extension = filename.split(".")[1];
     if (!SUPPORTFILE.includes(extension)) {
-      alert('[@react/repl] now just support .jsx/.js extension')
-      return
+      alert("[@react/repl] now just support .jsx/.js extension");
+      return;
     }
 
     cancelNameFile();
@@ -81,9 +83,9 @@ const FileSelector = () => {
   };
 
   const handleDelete = (e: Event, file: string) => {
-    e.stopPropagation()
-    deleteFile(file)
-  }
+    e.stopPropagation();
+    deleteFile(file);
+  };
 
   return (
     <div className="file-selector">
@@ -97,7 +99,10 @@ const FileSelector = () => {
             >
               <span className="label">{file}</span>
               {index > 0 && (
-                <span className="remove" onClick={(e) => handleDelete(e as unknown as Event, file)}>
+                <span
+                  className="remove"
+                  onClick={(e) => handleDelete(e as unknown as Event, file)}
+                >
                   <svg
                     className="icon"
                     width="12"
@@ -113,19 +118,19 @@ const FileSelector = () => {
           )}
           {((pending === true && index === filenames.length - 1) ||
             pending === file) && (
-              <div className="file pending">
-                <span className="file pending">{pendingFileName}</span>
-                <input
-                  ref={inputRef}
-                  value={pendingFileName}
-                  onChange={(e) => setPendingFileName(e.target.value)}
-                  onBlur={doneNameFile}
-                  onKeyUp={(e) =>
-                    (e.key === "Enter" || e.key === "Esc") && doneNameFile()
-                  }
-                ></input>
-              </div>
-            )}
+            <div className="file pending">
+              <span className="file pending">{pendingFileName}</span>
+              <input
+                ref={inputRef}
+                value={pendingFileName}
+                onChange={(e) => setPendingFileName(e.target.value)}
+                onBlur={doneNameFile}
+                onKeyUp={(e) =>
+                  (e.key === "Enter" || e.key === "Esc") && doneNameFile()
+                }
+              ></input>
+            </div>
+          )}
         </Fragment>
       ))}
       <span className="add" onClick={startAddFile}>
@@ -133,7 +138,10 @@ const FileSelector = () => {
       </span>
 
       <div className="import-map-wrapper">
-        <div className={`file ${activeFilename === importMapFile && "active"}`} onClick={() => setActive(importMapFile)}>
+        <div
+          className={`file ${activeFilename === importMapFile && "active"}`}
+          onClick={() => setActive(importMapFile)}
+        >
           <span className="label">Import Map</span>
         </div>
       </div>

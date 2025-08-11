@@ -1,26 +1,26 @@
 {
   "name": "react-repl-plus",
   "version": "1.0.0",
+  "description": "React component for editing React components, it is similar to vue repl",
   "type": "module",
-  "author": {
-    "name": "Triumph-light",
-    "email": "2495685883@qq.com"
-  },
   "keywords": [
     "react",
     "react-playground",
     "react-repl"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Triumph-light/react-repl.git"
-  },
+  "license": "MIT",
   "homepage": "https://github.com/Triumph-light/react-repl#readme",
   "bugs": {
     "url": "https://github.com/Triumph-light/react-repl/issues"
   },
-  "license": "MIT",
-  "description": "React component for editing React components, it is similar to vue repl",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Triumph-light/react-repl.git"
+  },
+  "author": {
+    "name": "Triumph-light",
+    "email": "2495685883@qq.com"
+  },
   "files": [
     "dist"
   ],
@@ -42,19 +42,22 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "preview": "vite build -c vite.preview.config.ts",
     "release": "npm run build && bumpp && npm publish"
   },
   "dependencies": {
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
-  },
-  "devDependencies": {
-    "@babel/standalone": "^7.27.0",
-    "@eslint/js": "^9.21.0",
     "@monaco-editor/react": "^4.7.0-rc.0",
     "@shikijs/monaco": "^3.2.1",
     "@types/babel__standalone": "^7.1.9",
+    "magic-string": "^0.30.17",
+    "monaco-editor": "^0.52.2",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "shiki": "^3.2.1"
+  },
+  "devDependencies": {
+    "@babel/standalone": "^7.27.0",
     "@types/react": "^18.0.10",
     "@types/react-dom": "^18.0.4",
     "@vercel/analytics": "^1.5.0",
@@ -62,16 +65,10 @@
     "ahooks": "^3.8.4",
     "bumpp": "^10.1.1",
     "eslint": "^9.21.0",
-    "eslint-plugin-react-hooks": "^5.1.0",
-    "eslint-plugin-react-refresh": "^0.4.19",
     "fflate": "^0.8.2",
     "globals": "^15.15.0",
     "less": "^4.2.2",
-    "magic-string": "^0.30.17",
-    "monaco-editor": "^0.52.2",
-    "shiki": "^3.2.1",
     "typescript": "~5.7.2",
-    "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0",
     "vite-plugin-dts": "^4.5.4"
   }
