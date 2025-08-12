@@ -12,9 +12,19 @@ export class File {
   ) {}
 
   get language() {
-    if (this.filename.endsWith(".tsx") || this.filename.endsWith(".ts"))
-      return "typescript";
-    return "javascript";
+    const extension = this.filename.split(".")[1];
+    switch (extension) {
+      case "tsx":
+      case "ts":
+        return "typescript";
+
+      case "jsx":
+      case "js":
+        return "javascript";
+
+      default:
+        return extension;
+    }
   }
 }
 
@@ -33,7 +43,21 @@ type StoreParams = {
 
 export type Subscribe = () => void;
 
+export const tsConfigFile = "tsconfig.json";
 export const importMapFile = "import-map.json";
+
+const tsconfig = {
+  compilerOptions: {
+    allowJs: true,
+    checkJs: true,
+    jsx: "Preserve",
+    target: "ESNext",
+    module: "ESNext",
+    moduleResolution: "NodeJs",
+    allowImportingTsExtensions: true,
+    esModuleInterop: true,
+  },
+};
 export class ReplStore {
   /**
    * file system
@@ -66,10 +90,19 @@ export class ReplStore {
     this.files = files || {
       [mainFile]: new File(mainFile, template.welcomeCode),
     };
+
+    /**
+     * 初始化tsconfig.json\import-map.json
+     */
     this.files[importMapFile] = new File(
       importMapFile,
       JSON.stringify(builtinImportMap, null, 2),
     );
+    this.files[tsConfigFile] = new File(
+      tsConfigFile,
+      JSON.stringify(tsconfig, null, 2),
+    );
+
     this.mainFile = mainFile;
     this.activeFilename = activeFilename || mainFile;
     this.template = template;
@@ -156,6 +189,14 @@ export class ReplStore {
       console.log(e);
     }
     return {};
+  };
+
+  getTsConig: () => Record<string, any> = () => {
+    try {
+      return JSON.parse(this.files[tsConfigFile].code);
+    } catch (error) {
+      return {};
+    }
   };
 
   setImportMap: (map: ImportMap) => void = (map: ImportMap) => {

@@ -20,21 +20,6 @@ const EditorContainer = () => {
     },
   );
 
-  let language: string;
-  const extension = activeFile.filename.split(".")[1];
-  switch (extension) {
-    case "tsx":
-    case "ts":
-      language = "typescript";
-      break;
-    case "jsx":
-    case "js":
-      language = "javascript";
-      break;
-    default:
-      language = extension;
-  }
-
   return (
     <>
       <FileSelector></FileSelector>
@@ -42,7 +27,7 @@ const EditorContainer = () => {
         <MonaceEditor
           onChange={onChange}
           value={activeFile?.code}
-          language={language}
+          language={activeFile.language}
         ></MonaceEditor>
 
         <div className="editor-floating">

@@ -1,8 +1,12 @@
 import React, { Fragment, useContext, useRef, useState } from "react";
-import StoreContext, { importMapFile } from "../../component/repl/storeContext";
+import StoreContext, {
+  importMapFile,
+  tsConfigFile,
+} from "../../component/repl/storeContext";
 import "./index.less";
 
 const SUPPORTFILE = ["jsx", "js", "ts", "tsx"];
+const EXCLUDEFILE = [importMapFile, tsConfigFile];
 
 const FileSelector = () => {
   const [pending, setPending] = useState<boolean | string>(false);
@@ -15,7 +19,7 @@ const FileSelector = () => {
     store!;
 
   const filenames = Object.entries(files)
-    .filter(([name]) => name !== importMapFile)
+    .filter(([name]) => !EXCLUDEFILE.includes(name))
     .map(([name]) => name);
   const startAddFile = () => {
     let i = 0;
@@ -138,6 +142,12 @@ const FileSelector = () => {
       </span>
 
       <div className="import-map-wrapper">
+        <div
+          className={`file ${activeFilename === tsConfigFile && "active"}`}
+          onClick={() => setActive(tsConfigFile)}
+        >
+          <span className="label">tsconfig.json</span>
+        </div>
         <div
           className={`file ${activeFilename === importMapFile && "active"}`}
           onClick={() => setActive(importMapFile)}

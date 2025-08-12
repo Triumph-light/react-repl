@@ -1,10 +1,11 @@
 import { useMount, useUnmount, useUpdateEffect } from "ahooks";
 import * as monaco from "monaco-editor";
+import { Uri } from "monaco-editor";
 import { useContext, useEffect, useRef, type KeyboardEvent } from "react";
 import AutoSaveContext from "../component/repl/autoSaveContext";
 import StoreContext from "../component/repl/storeContext";
 import ThemeContext from "../component/repl/themeContext";
-import { initMonaco } from "./env";
+import { initMonaco, loadMonacoEnv } from "./env";
 import { registerHighlighter } from "./highlight";
 import type * as monacoEditor from "monaco-editor/esm/vs/editor/editor.api";
 
@@ -18,7 +19,8 @@ interface Props {
 const MonacoEditor = (props: Props) => {
   const { onChange, value, language } = props;
   const propTheme = useContext(ThemeContext)!;
-  const { activeFilename } = useContext(StoreContext);
+  const store = useContext(StoreContext);
+  const { activeFilename } = store;
 
   const emitChangeEvent = () => {
     if (!__prevent_trigger_change_event.current) {
@@ -32,13 +34,8 @@ const MonacoEditor = (props: Props) => {
   const initMonacoEditor = () => {
     theme.current = registerHighlighter();
     if (containerRef.current) {
-      const model = monaco.editor.createModel(
-        value,
-        language,
-        monaco.Uri.parse(`file:///${activeFilename}`),
-      );
       editorInstance.current = monaco.editor.create(containerRef.current, {
-        model,
+        model: monaco.editor.getModel(Uri.parse(`file:///${activeFilename}`)),
         fontSize: 13,
         tabSize: 2,
         automaticLayout: true,
@@ -57,10 +54,23 @@ const MonacoEditor = (props: Props) => {
     }
   };
 
+  /**
+   * 初始化
+   */
+  initMonaco(store);
   useMount(() => {
-    initMonaco();
     initMonacoEditor();
   });
+
+  /**
+   * tsconfig.json change
+   */
+  useUpdateEffect(() => {
+    loadMonacoEnv(store);
+    editorInstance.current?.setModel(
+      monaco.editor.getModel(Uri.parse(`file:///${activeFilename}`)),
+    );
+  }, [store.getTsConig()]);
 
   /**
    * autosave
