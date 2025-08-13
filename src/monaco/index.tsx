@@ -3,7 +3,7 @@ import * as monaco from "monaco-editor";
 import { Uri } from "monaco-editor";
 import { useContext, useEffect, useRef, type KeyboardEvent } from "react";
 import AutoSaveContext from "../component/repl/autoSaveContext";
-import StoreContext, { tsConfigFile } from "../component/repl/storeContext";
+import StoreContext from "../component/repl/storeContext";
 import ThemeContext from "../component/repl/themeContext";
 import { initMonaco, loadMonacoEnv } from "./env";
 import { registerHighlighter } from "./highlight";
@@ -72,7 +72,7 @@ const MonacoEditor = (props: Props) => {
     editorInstance.current?.setModel(
       monaco.editor.getModel(Uri.parse(`file:///${activeFilename}`)),
     );
-  }, [store.files[tsConfigFile].code]);
+  }, [store.getTsConig()]);
 
   /**
    * autosave

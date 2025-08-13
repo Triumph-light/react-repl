@@ -85,7 +85,7 @@ export function loadMonacoEnv(store: ReplStore) {
   registerDtsRecursive(
     "https://cdn.jsdelivr.net/npm/@types/react-dom@18/index.d.ts",
   );
-  tsconfig.include?.forEach((entryUrl: string) => {
+  tsconfig.compilerOptions?.types?.forEach((entryUrl: string) => {
     registerDtsRecursive(entryUrl);
   });
 
