@@ -52,7 +52,7 @@ const Preview = () => {
   };
 
   function updatePreview() {
-    // console.clear();
+    console.clear();
     setRuntimeError("");
 
     try {

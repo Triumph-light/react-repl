@@ -6,7 +6,11 @@ import cssWorker from "monaco-editor/esm/vs/language/css/css.worker?worker";
 import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
 import tsWorker from "monaco-editor/esm/vs/language/typescript/ts.worker?worker";
 import { useEffect } from "react";
-import { getOrCreateModel, normalizeCompilerOptions } from "../utils";
+import {
+  getOrCreateModel,
+  normalizeCompilerOptions,
+  registerDtsRecursive,
+} from "../utils";
 import type { ReplStore } from "../component/repl/storeContext";
 
 export function initMonaco(store: ReplStore) {
@@ -40,6 +44,7 @@ export function initMonaco(store: ReplStore) {
 }
 
 export function loadMonacoEnv(store: ReplStore) {
+  console.log("load");
   self.MonacoEnvironment = {
     getWorker(_: any, label: string) {
       switch (label) {
@@ -67,39 +72,24 @@ export function loadMonacoEnv(store: ReplStore) {
 
   /**
    * 根据tsconfig.json设置monaco的tsworker配置
+   * 设置compilerOptions，并注册dts文件
    */
   const tsconfig = store.getTsConig();
-  console.log("tsconfig", normalizeCompilerOptions(tsconfig.compilerOptions));
   monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
     ...normalizeCompilerOptions(tsconfig.compilerOptions),
+  });
+  // todo: 内部先默认支持react类型，后续进行统一处理
+  registerDtsRecursive(
+    "https://cdn.jsdelivr.net/npm/@types/react@18/index.d.ts",
+  );
+  registerDtsRecursive(
+    "https://cdn.jsdelivr.net/npm/@types/react-dom@18/index.d.ts",
+  );
+  tsconfig.include?.forEach((entryUrl: string) => {
+    registerDtsRecursive(entryUrl);
   });
 
   // 添加默认 lib（重要，否则编辑器不知道 DOM 类型等）
   monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true);
   monaco.languages.typescript.javascriptDefaults.setEagerModelSync(true);
-
-  // 假设你用 fetch 从 CDN 获取 React 类型声明
-  /**
-   * todo: 做一个版本选择
-   */
-  async function addReactTypes() {
-    const reactDts = await fetch(
-      "https://cdn.jsdelivr.net/npm/@types/react@18/index.d.ts",
-    ).then((res) => res.text());
-
-    const reactDomDts = await fetch(
-      "https://cdn.jsdelivr.net/npm/@types/react-dom@18/index.d.ts",
-    ).then((res) => res.text());
-
-    monaco.languages.typescript.typescriptDefaults.addExtraLib(
-      reactDts,
-      "file:///node_modules/@types/react/index.d.ts",
-    );
-    monaco.languages.typescript.typescriptDefaults.addExtraLib(
-      reactDomDts,
-      "file:///node_modules/@types/react-dom/index.d.ts",
-    );
-  }
-
-  addReactTypes();
 }

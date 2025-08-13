@@ -67,3 +67,102 @@ export function getOrCreateModel(
   }
   return editor.createModel(value, lang, uri);
 }
+
+/**
+ * 提取cdn里.d.ts关键路径
+ * @param url
+ * @returns
+ */
+export function getCdnPath(url: string) {
+  let path = url;
+
+  if (url.includes("cdn.jsdelivr.net")) {
+    // 去掉前缀 https://cdn.jsdelivr.net/npm/
+    path = url.replace("https://cdn.jsdelivr.net/npm/", "/");
+  } else if (url.includes("unpkg.com")) {
+    // 去掉前缀 https://unpkg.com/
+    path = url.replace("https://unpkg.com/", "/");
+  } else if (url.includes("esm.sh")) {
+    path = url.replace("https://esm.sh/", "/");
+  } else if (url.includes("cdn.skypack.dev")) {
+    path = url.replace("https://cdn.skypack.dev/", "/");
+  }
+
+  // 去掉版本号，例如 zustand@5.0.7 -> zustand
+  const versionRegex = /@(\d+(\.)?)+(?:-[^\/]+)?/;
+  path = path.replace(versionRegex, "");
+
+  return path;
+}
+
+/**
+ * 自动递归加载 d.ts 并注册到 Monaco
+ * @param entryUrl 入口 d.ts URL
+ * @param entryFile 入口文件在 Monaco 的路径（如 file:///node_modules/zustand/index.d.ts）
+ */
+export async function registerDtsRecursive(entryUrl: string) {
+  const visited = new Map<string, string>();
+
+  /**
+   * 提取 文件路径
+   */
+  const entryFile = `file:///node_modules${getCdnPath(entryUrl)}`;
+  async function load(url: string) {
+    if (visited.has(url)) return visited.get(url)!;
+    const content = await fetch(url).then((r) => r.text());
+    visited.set(url, content);
+
+    const importRegex =
+      /export\s+\*\s+from\s+['"]([^'"]+)['"]|import\s+type\s+.*?\s+from\s+['"]([^'"]+)['"]/g;
+    let match: RegExpExecArray | null;
+
+    while ((match = importRegex.exec(content))) {
+      const depModule = match[1] || match[2];
+      if (!depModule) continue;
+
+      // 生成子模块 URL
+      let depUrl = depModule;
+      if (!depModule.startsWith(".")) {
+        // npm 包或模块，尝试用入口 URL 替换文件名
+        const parts = entryUrl.split("/");
+        const base = parts.slice(0, parts.length - 1).join("/");
+        const name = depModule.split("/").pop()!;
+        depUrl = `${base}/${name}.d.ts`;
+      } else {
+        // 相对路径
+        const entryParts = entryUrl.split("/");
+        entryParts.pop();
+        depUrl = `${entryParts.join("/")}/${depModule.replace(
+          /^\.\//,
+          "",
+        )}.d.ts`;
+      }
+
+      await load(depUrl);
+    }
+
+    return content;
+  }
+
+  await load(entryUrl);
+  // 注册所有子模块
+  visited.forEach((content, url) => {
+    if (url === entryUrl) return;
+
+    const parts = url.split("/");
+    const filename = parts[parts.length - 1].replace(".d.ts", "");
+    const pkgName = (parts[parts.length - 2] || "lib").split("@")[0]; // 上一级目录名当包名
+
+    const filePath = `file:///node_modules/${pkgName}/${filename}.d.ts`;
+    monaco.languages.typescript.typescriptDefaults.addExtraLib(
+      content,
+      filePath,
+    );
+  });
+
+  // 注册入口文件
+  monaco.languages.typescript.typescriptDefaults.addExtraLib(
+    visited.get(entryUrl)!,
+    entryFile,
+  );
+}

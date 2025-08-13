@@ -3,7 +3,7 @@ import * as monaco from "monaco-editor";
 import { Uri } from "monaco-editor";
 import { useContext, useEffect, useRef, type KeyboardEvent } from "react";
 import AutoSaveContext from "../component/repl/autoSaveContext";
-import StoreContext from "../component/repl/storeContext";
+import StoreContext, { tsConfigFile } from "../component/repl/storeContext";
 import ThemeContext from "../component/repl/themeContext";
 import { initMonaco, loadMonacoEnv } from "./env";
 import { registerHighlighter } from "./highlight";
@@ -16,6 +16,9 @@ interface Props {
   uri?: (monaco: typeof monacoEditor) => monacoEditor.Uri;
 }
 
+/**
+ * todo: 加载了两次原因待排查。
+ */
 const MonacoEditor = (props: Props) => {
   const { onChange, value, language } = props;
   const propTheme = useContext(ThemeContext)!;
@@ -50,7 +53,6 @@ const MonacoEditor = (props: Props) => {
         readOnly: false,
         theme: theme.current[propTheme],
       });
-      console.log(editorInstance.current.getModel()?.getLanguageId());
     }
   };
 
@@ -70,7 +72,7 @@ const MonacoEditor = (props: Props) => {
     editorInstance.current?.setModel(
       monaco.editor.getModel(Uri.parse(`file:///${activeFilename}`)),
     );
-  }, [store.getTsConig()]);
+  }, [store.files[tsConfigFile].code]);
 
   /**
    * autosave
